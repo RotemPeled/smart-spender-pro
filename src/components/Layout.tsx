@@ -1,8 +1,7 @@
 import { ReactNode } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Wallet, LayoutDashboard, Briefcase, DollarSign, LogOut } from "lucide-react";
+import { Wallet, LayoutDashboard, Briefcase, DollarSign } from "lucide-react";
 
 interface LayoutProps {
   children: ReactNode;
@@ -10,13 +9,6 @@ interface LayoutProps {
 
 export const Layout = ({ children }: LayoutProps) => {
   const location = useLocation();
-  const navigate = useNavigate();
-  const { signOut, user } = useAuth();
-
-  const handleSignOut = async () => {
-    await signOut();
-    navigate("/auth");
-  };
 
   const navItems = [
     { path: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -39,7 +31,7 @@ export const Layout = ({ children }: LayoutProps) => {
               </div>
             </Link>
 
-            <nav className="hidden md:flex items-center gap-2">
+            <nav className="flex items-center gap-2">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = location.pathname === item.path;
@@ -56,31 +48,8 @@ export const Layout = ({ children }: LayoutProps) => {
                 );
               })}
             </nav>
-
-            <Button variant="ghost" size="icon" onClick={handleSignOut} title="Sign Out">
-              <LogOut className="w-5 h-5" />
-            </Button>
           </div>
 
-          {/* Mobile Navigation */}
-          <nav className="md:hidden flex items-center gap-2 mt-4 overflow-x-auto pb-2">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = location.pathname === item.path;
-              return (
-                <Link key={item.path} to={item.path}>
-                  <Button
-                    variant={isActive ? "default" : "ghost"}
-                    size="sm"
-                    className="gap-2 whitespace-nowrap"
-                  >
-                    <Icon className="w-4 h-4" />
-                    {item.label}
-                  </Button>
-                </Link>
-              );
-            })}
-          </nav>
         </div>
       </header>
 
