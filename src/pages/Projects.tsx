@@ -31,6 +31,7 @@ export default function Projects() {
   const { user } = useAuth();
   const [projects, setProjects] = useState<any[]>([]);
   const [filter, setFilter] = useState<string>("all");
+  const [editingProject, setEditingProject] = useState<any>(null);
 
   useEffect(() => {
     if (user) {
@@ -167,7 +168,8 @@ export default function Projects() {
           filteredProjects.map((project) => (
             <Card
               key={project.id}
-              className="p-4 sm:p-6 shadow-elevation hover:shadow-glow transition-all"
+              className="p-4 sm:p-6 shadow-elevation hover:shadow-glow transition-all cursor-pointer"
+              onClick={() => setEditingProject(project)}
             >
               <div className="flex flex-col gap-3 sm:gap-4">
                 <div className="flex items-start gap-3 sm:gap-4">
@@ -270,31 +272,6 @@ export default function Projects() {
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
-                    <div className="mt-3 flex gap-2">
-                      <EditProjectDialog project={project} onUpdate={handleUpdateProject} />
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button variant="outline" size="sm">
-                            <Trash2 className="w-4 h-4 ml-2" />
-                            מחק
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>האם אתה בטוח?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              פעולה זו תמחק את הפרויקט לצמיתות ולא ניתן לבטל אותה.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>ביטול</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => handleDeleteProject(project.id)}>
-                              מחק
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -302,6 +279,15 @@ export default function Projects() {
           ))
         )}
       </div>
+      
+      {editingProject && (
+        <EditProjectDialog
+          project={editingProject}
+          onUpdate={handleUpdateProject}
+          open={!!editingProject}
+          onOpenChange={(open) => !open && setEditingProject(null)}
+        />
+      )}
     </div>
   );
 }

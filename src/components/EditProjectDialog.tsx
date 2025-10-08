@@ -1,19 +1,19 @@
-import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
+import { useState, useEffect } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Pencil } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface EditProjectDialogProps {
   project: any;
   onUpdate: (projectId: string, projectData: any) => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
-export const EditProjectDialog = ({ project, onUpdate }: EditProjectDialogProps) => {
-  const [open, setOpen] = useState(false);
+export const EditProjectDialog = ({ project, onUpdate, open, onOpenChange }: EditProjectDialogProps) => {
   const [name, setName] = useState(project.name);
   const [clientName, setClientName] = useState(project.client_name || "");
   const [description, setDescription] = useState(project.description || "");
@@ -21,6 +21,17 @@ export const EditProjectDialog = ({ project, onUpdate }: EditProjectDialogProps)
   const [deadline, setDeadline] = useState(project.deadline ? new Date(project.deadline).toISOString().split('T')[0] : "");
   const [isRetainer, setIsRetainer] = useState(project.is_retainer || false);
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (open) {
+      setName(project.name);
+      setClientName(project.client_name || "");
+      setDescription(project.description || "");
+      setPrice(project.price.toString());
+      setDeadline(project.deadline ? new Date(project.deadline).toISOString().split('T')[0] : "");
+      setIsRetainer(project.is_retainer || false);
+    }
+  }, [open, project]);
 
   const handleSubmit = () => {
     if (!name || !price) {
@@ -41,22 +52,11 @@ export const EditProjectDialog = ({ project, onUpdate }: EditProjectDialogProps)
       is_retainer: isRetainer,
     });
 
-    setOpen(false);
-
-    toast({
-      title: "הצלחה",
-      description: "הפרויקט עודכן בהצלחה",
-    });
+    onOpenChange(false);
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-2">
-          <Pencil className="w-4 h-4" />
-          ערוך
-        </Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>ערוך פרויקט</DialogTitle>
@@ -137,7 +137,7 @@ export const EditProjectDialog = ({ project, onUpdate }: EditProjectDialogProps)
           )}
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)}>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
             ביטול
           </Button>
           <Button onClick={handleSubmit}>שמור שינויים</Button>
