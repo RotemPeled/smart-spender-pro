@@ -36,7 +36,7 @@ export default function Dashboard() {
       .gte("date", monthStart.toISOString())
       .lte("date", monthEnd.toISOString());
 
-    const income = transactions
+    const transactionIncome = transactions
       ?.filter((t) => t.type === "income")
       .reduce((sum, t) => sum + Number(t.amount), 0) || 0;
 
@@ -46,6 +46,13 @@ export default function Dashboard() {
       .select("*")
       .eq("user_id", user?.id)
       .eq("is_archived", false);
+
+    // Add paid projects to income
+    const paidProjectsIncome = projects
+      ?.filter((p) => p.payment_status === "paid")
+      .reduce((sum, p) => sum + Number(p.price), 0) || 0;
+
+    const totalIncome = transactionIncome + paidProjectsIncome;
 
     const unpaid = projects
       ?.filter((p) => p.payment_status === "unpaid" || p.payment_status === "pending")
@@ -66,7 +73,7 @@ export default function Dashboard() {
       .sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime())
       .slice(0, 3) || [];
 
-    setStats({ totalIncome: income, unpaidAmount: unpaid, activeProjects: active });
+    setStats({ totalIncome, unpaidAmount: unpaid, activeProjects: active });
     setUpcomingDeadlines(upcoming);
   };
 

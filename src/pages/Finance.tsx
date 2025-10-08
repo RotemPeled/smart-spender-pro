@@ -38,18 +38,31 @@ export default function Finance() {
       .order("date", { ascending: false });
 
     const transactions = data || [];
-    const income = transactions
+    const transactionIncome = transactions
       .filter((t) => t.type === "income")
       .reduce((sum, t) => sum + Number(t.amount), 0);
     const expenses = transactions
       .filter((t) => t.type === "expense")
       .reduce((sum, t) => sum + Number(t.amount), 0);
 
+    // Fetch projects to include paid projects in income
+    const { data: projects } = await supabase
+      .from("projects")
+      .select("*")
+      .eq("user_id", user?.id)
+      .eq("is_archived", false);
+
+    const paidProjectsIncome = projects
+      ?.filter((p) => p.payment_status === "paid")
+      .reduce((sum, p) => sum + Number(p.price), 0) || 0;
+
+    const totalIncome = transactionIncome + paidProjectsIncome;
+
     setTransactions(transactions);
     setStats({
-      totalIncome: income,
+      totalIncome,
       totalExpenses: expenses,
-      netProfit: income - expenses,
+      netProfit: totalIncome - expenses,
     });
   };
 
