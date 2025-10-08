@@ -13,7 +13,7 @@ export default function Auth() {
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { signIn, signUp, user } = useAuth();
+  const { signIn, signUp, user, loading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,6 +21,20 @@ export default function Auth() {
       navigate("/");
     }
   }, [user, navigate]);
+
+  // Show loading while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-accent">
+        <div className="text-center">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-primary flex items-center justify-center mx-auto mb-4 animate-pulse">
+            <Wallet className="w-8 h-8 text-primary-foreground" />
+          </div>
+          <p className="text-muted-foreground">...טוען</p>
+        </div>
+      </div>
+    );
+  }
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,7 +99,7 @@ export default function Auth() {
                   />
                 </div>
                 <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? "מתחבר..." : "התחבר"}
+                  {isLoading ? "...מתחבר" : "התחבר"}
                 </Button>
               </form>
             </TabsContent>
@@ -126,7 +140,7 @@ export default function Auth() {
                   />
                 </div>
                 <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? "יוצר חשבון..." : "צור חשבון"}
+                  {isLoading ? "...יוצר חשבון" : "צור חשבון"}
                 </Button>
               </form>
             </TabsContent>
