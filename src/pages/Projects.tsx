@@ -14,7 +14,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { AddProjectDialog } from "@/components/AddProjectDialog";
 import { EditProjectDialog } from "@/components/EditProjectDialog";
 import { format } from "date-fns";
-import { he } from "date-fns/locale/he";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -195,7 +194,7 @@ export default function Projects() {
                       {project.deadline && (
                         <div className="flex items-center gap-1 text-xs text-muted-foreground">
                           <Calendar className="w-3 h-3" />
-                          {format(new Date(project.deadline), "dd MMM yyyy", { locale: he })}
+                          {format(new Date(project.deadline), "MMM dd, yyyy")}
                         </div>
                       )}
                       

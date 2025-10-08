@@ -38,7 +38,7 @@ export const EditProjectDialog = ({ project, onUpdate }: EditProjectDialogProps)
       client_name: clientName,
       description,
       price: parseFloat(price),
-      deadline: deadline || new Date().toISOString().split("T")[0],
+      deadline: deadline || null,
       work_status: workStatus,
       payment_status: paymentStatus,
       priority,
@@ -109,7 +109,6 @@ export const EditProjectDialog = ({ project, onUpdate }: EditProjectDialogProps)
             <Input
               id="price"
               type="number"
-              inputMode="decimal"
               placeholder="0.00"
               value={price}
               onChange={(e) => setPrice(e.target.value)}

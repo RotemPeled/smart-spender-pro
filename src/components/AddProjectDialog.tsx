@@ -16,7 +16,7 @@ export const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
   const [clientName, setClientName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
-  const [deadline, setDeadline] = useState(new Date().toISOString().split("T")[0]);
+  const [deadline, setDeadline] = useState("");
   const { toast } = useToast();
 
   const handleSubmit = () => {
@@ -34,7 +34,7 @@ export const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
       client_name: clientName,
       description,
       price: parseFloat(price),
-      deadline: deadline || new Date().toISOString().split("T")[0],
+      deadline: deadline || null,
       work_status: "in_progress",
       payment_status: "unpaid",
       priority: "medium",
@@ -45,7 +45,7 @@ export const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
     setClientName("");
     setDescription("");
     setPrice("");
-    setDeadline(new Date().toISOString().split("T")[0]);
+    setDeadline("");
     setOpen(false);
 
     toast({

@@ -7,7 +7,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Link } from "react-router-dom";
 import { format, startOfMonth, endOfMonth } from "date-fns";
-import { he } from "date-fns/locale/he";
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -103,7 +102,7 @@ export default function Dashboard() {
           <SelectContent>
             {monthOptions.map((month) => (
               <SelectItem key={month} value={month}>
-                {format(new Date(month), "MMMM yyyy", { locale: he })}
+                {format(new Date(month), "MMMM yyyy")}
               </SelectItem>
             ))}
           </SelectContent>
@@ -194,7 +193,7 @@ export default function Dashboard() {
                 <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm flex-shrink-0">
                   <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground hidden sm:block" />
                   <span className="text-foreground font-medium whitespace-nowrap">
-                    {format(new Date(project.deadline), "MMM dd", { locale: he })}
+                    {format(new Date(project.deadline), "MMM dd")}
                   </span>
                 </div>
               </div>

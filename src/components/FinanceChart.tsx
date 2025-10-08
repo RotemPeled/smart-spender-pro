@@ -2,7 +2,6 @@ import { Card } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { Transaction, Project } from "@/types";
 import { format } from "date-fns";
-import { he } from "date-fns/locale/he";
 
 interface FinanceChartProps {
   transactions: Transaction[];
@@ -12,7 +11,7 @@ interface FinanceChartProps {
 export const FinanceChart = ({ transactions, projects = [] }: FinanceChartProps) => {
   const monthlyData = transactions.reduce((acc, transaction) => {
     const transactionDate = typeof transaction.date === 'string' ? new Date(transaction.date) : transaction.date;
-    const month = format(transactionDate, "MMM", { locale: he });
+    const month = format(transactionDate, "MMM");
     
     if (!acc[month]) {
       acc[month] = { month, income: 0, expenses: 0 };
@@ -32,7 +31,7 @@ export const FinanceChart = ({ transactions, projects = [] }: FinanceChartProps)
     .filter((p) => p.payment_status === "paid" && p.deadline)
     .forEach((project) => {
       const projectDate = new Date(project.deadline!);
-      const month = format(projectDate, "MMM", { locale: he });
+      const month = format(projectDate, "MMM");
       
       if (!monthlyData[month]) {
         monthlyData[month] = { month, income: 0, expenses: 0 };
