@@ -111,21 +111,7 @@ export default function Finance() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-        <Card className="p-4 sm:p-6 bg-gradient-card shadow-elevation hover:shadow-glow transition-all">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-xs sm:text-sm font-medium text-muted-foreground">סך הכנסות</p>
-              <p className="text-2xl sm:text-3xl font-bold text-success mt-1 sm:mt-2">
-                ₪{stats.totalIncome.toLocaleString()}
-              </p>
-            </div>
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-success/10 flex items-center justify-center flex-shrink-0">
-              <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-success" />
-            </div>
-          </div>
-        </Card>
-
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2">
         <Card className="p-4 sm:p-6 bg-gradient-card shadow-elevation hover:shadow-glow transition-all">
           <div className="flex items-center justify-between">
             <div>

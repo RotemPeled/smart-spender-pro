@@ -206,24 +206,6 @@ export default function Dashboard() {
         )}
       </Card>
 
-      {/* Quick Actions */}
-      <Card className="p-4 sm:p-6 shadow-elevation">
-        <h2 className="text-lg sm:text-xl font-bold text-foreground mb-4">פעולות מהירות</h2>
-        <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-3">
-          <Link to="/projects">
-            <Button className="gap-2">
-              <Briefcase className="w-4 h-4" />
-              נהל פרויקטים
-            </Button>
-          </Link>
-          <Link to="/finance">
-            <Button variant="outline" className="gap-2">
-              <DollarSign className="w-4 h-4" />
-              הצג דוח כספי מלא
-            </Button>
-          </Link>
-        </div>
-      </Card>
     </div>
   );
 }

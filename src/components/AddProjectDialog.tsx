@@ -111,6 +111,7 @@ export const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
             <Input
               id="price"
               type="number"
+              inputMode="decimal"
               placeholder="0.00"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
