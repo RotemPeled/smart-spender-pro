@@ -5,7 +5,6 @@ import { DollarSign, TrendingUp, TrendingDown, Plus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { format, startOfMonth, endOfMonth } from "date-fns";
-import { he } from "date-fns/locale";
 import { AddTransactionDialog } from "@/components/AddTransactionDialog";
 import { TransactionList } from "@/components/TransactionList";
 import { FinanceChart } from "@/components/FinanceChart";
@@ -69,20 +68,20 @@ export default function Finance() {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between flex-wrap gap-4">
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">כספים</h1>
-          <p className="text-muted-foreground mt-1">עקוב אחרי ההכנסות וההוצאות שלך</p>
+          <h1 className="text-3xl font-bold text-foreground">Finance</h1>
+          <p className="text-muted-foreground mt-1">Track your income and expenses</p>
         </div>
         <div className="flex items-center gap-3">
           <Select value={selectedMonth} onValueChange={setSelectedMonth}>
             <SelectTrigger className="w-[180px]">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-popover z-50">
+            <SelectContent>
               {monthOptions.map((month) => (
                 <SelectItem key={month} value={month}>
-                  {format(new Date(month), "MMMM yyyy", { locale: he })}
+                  {format(new Date(month), "MMMM yyyy")}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -96,9 +95,9 @@ export default function Finance() {
         <Card className="p-6 bg-gradient-card shadow-elevation hover:shadow-glow transition-all">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">סה״כ הכנסות</p>
+              <p className="text-sm font-medium text-muted-foreground">Total Income</p>
               <p className="text-3xl font-bold text-success mt-2">
-                ₪{stats.totalIncome.toLocaleString()}
+                ${stats.totalIncome.toLocaleString()}
               </p>
             </div>
             <div className="w-12 h-12 rounded-full bg-success/10 flex items-center justify-center">
@@ -110,9 +109,9 @@ export default function Finance() {
         <Card className="p-6 bg-gradient-card shadow-elevation hover:shadow-glow transition-all">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">סה״כ הוצאות</p>
+              <p className="text-sm font-medium text-muted-foreground">Total Expenses</p>
               <p className="text-3xl font-bold text-destructive mt-2">
-                ₪{stats.totalExpenses.toLocaleString()}
+                ${stats.totalExpenses.toLocaleString()}
               </p>
             </div>
             <div className="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center">
@@ -124,13 +123,13 @@ export default function Finance() {
         <Card className="p-6 bg-gradient-card shadow-elevation hover:shadow-glow transition-all">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">רווח נקי</p>
+              <p className="text-sm font-medium text-muted-foreground">Net Profit</p>
               <p
                 className={`text-3xl font-bold mt-2 ${
                   stats.netProfit >= 0 ? "text-success" : "text-destructive"
                 }`}
               >
-                ₪{stats.netProfit.toLocaleString()}
+                ${stats.netProfit.toLocaleString()}
               </p>
             </div>
             <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
@@ -153,9 +152,9 @@ export default function Finance() {
             <Plus className="w-8 h-8 text-primary" />
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-foreground">חבר חשבון בנק</h3>
+            <h3 className="text-lg font-semibold text-foreground">Connect Bank Account</h3>
             <p className="text-muted-foreground mt-1">
-              ייבא תנועות אוטומטית מחשבון הבנק שלך (בקרוב)
+              Automatically import transactions from your bank account (Coming Soon)
             </p>
           </div>
         </div>

@@ -7,7 +7,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Link } from "react-router-dom";
 import { format, startOfMonth, endOfMonth } from "date-fns";
-import { he } from "date-fns/locale";
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -81,17 +80,17 @@ export default function Dashboard() {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">לוח בקרה</h1>
-          <p className="text-muted-foreground mt-1">ברוך הבא! הנה הסקירה שלך.</p>
+          <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
+          <p className="text-muted-foreground mt-1">Welcome back! Here's your overview.</p>
         </div>
         <Select value={selectedMonth} onValueChange={setSelectedMonth}>
           <SelectTrigger className="w-[180px]">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent className="bg-popover z-50">
+          <SelectContent>
             {monthOptions.map((month) => (
               <SelectItem key={month} value={month}>
-                {format(new Date(month), "MMMM yyyy", { locale: he })}
+                {format(new Date(month), "MMMM yyyy")}
               </SelectItem>
             ))}
           </SelectContent>
@@ -103,11 +102,11 @@ export default function Dashboard() {
         <Card className="p-6 bg-gradient-card shadow-elevation hover:shadow-glow transition-all">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">סה״כ הכנסות</p>
+              <p className="text-sm font-medium text-muted-foreground">Total Income</p>
               <p className="text-3xl font-bold text-success mt-2">
-                ₪{stats.totalIncome.toLocaleString()}
+                ${stats.totalIncome.toLocaleString()}
               </p>
-              <p className="text-xs text-muted-foreground mt-1">החודש</p>
+              <p className="text-xs text-muted-foreground mt-1">This month</p>
             </div>
             <div className="w-12 h-12 rounded-full bg-success/10 flex items-center justify-center">
               <TrendingUp className="w-6 h-6 text-success" />
@@ -118,11 +117,11 @@ export default function Dashboard() {
         <Card className="p-6 bg-gradient-card shadow-elevation hover:shadow-glow transition-all">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">סכום לא שולם</p>
+              <p className="text-sm font-medium text-muted-foreground">Unpaid Amount</p>
               <p className="text-3xl font-bold text-primary mt-2">
-                ₪{stats.unpaidAmount.toLocaleString()}
+                ${stats.unpaidAmount.toLocaleString()}
               </p>
-              <p className="text-xs text-muted-foreground mt-1">תשלומים ממתינים</p>
+              <p className="text-xs text-muted-foreground mt-1">Pending payments</p>
             </div>
             <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
               <DollarSign className="w-6 h-6 text-primary" />
@@ -133,11 +132,11 @@ export default function Dashboard() {
         <Card className="p-6 bg-gradient-card shadow-elevation hover:shadow-glow transition-all">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">פרויקטים פעילים</p>
+              <p className="text-sm font-medium text-muted-foreground">Active Projects</p>
               <p className="text-3xl font-bold text-foreground mt-2">
                 {stats.activeProjects}
               </p>
-              <p className="text-xs text-muted-foreground mt-1">בתהליך</p>
+              <p className="text-xs text-muted-foreground mt-1">In progress</p>
             </div>
             <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
               <Briefcase className="w-6 h-6 text-primary" />
@@ -149,11 +148,10 @@ export default function Dashboard() {
       {/* Upcoming Deadlines */}
       <Card className="p-6 shadow-elevation">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-foreground">דדליינים מתקרבים</h2>
+          <h2 className="text-xl font-bold text-foreground">Upcoming Deadlines</h2>
           <Link to="/projects">
             <Button variant="ghost" size="sm" className="gap-2">
-              <ArrowRight className="w-4 h-4" />
-              הצג הכל
+              View All <ArrowRight className="w-4 h-4" />
             </Button>
           </Link>
         </div>
@@ -176,7 +174,7 @@ export default function Dashboard() {
                 <div className="flex items-center gap-2 text-sm">
                   <Calendar className="w-4 h-4 text-muted-foreground" />
                   <span className="text-foreground font-medium">
-                    {format(new Date(project.deadline), "dd MMM, yyyy", { locale: he })}
+                    {format(new Date(project.deadline), "MMM dd, yyyy")}
                   </span>
                 </div>
               </div>
@@ -184,25 +182,25 @@ export default function Dashboard() {
           </div>
         ) : (
           <div className="text-center py-8 text-muted-foreground">
-            אין דדליינים מתקרבים ב-7 הימים הבאים
+            No upcoming deadlines in the next 7 days
           </div>
         )}
       </Card>
 
       {/* Quick Actions */}
       <Card className="p-6 shadow-elevation">
-        <h2 className="text-xl font-bold text-foreground mb-4">פעולות מהירות</h2>
+        <h2 className="text-xl font-bold text-foreground mb-4">Quick Actions</h2>
         <div className="flex flex-wrap gap-3">
           <Link to="/projects">
             <Button className="gap-2">
               <Briefcase className="w-4 h-4" />
-              נהל פרויקטים
+              Manage Projects
             </Button>
           </Link>
           <Link to="/finance">
             <Button variant="outline" className="gap-2">
               <DollarSign className="w-4 h-4" />
-              הצג דוח כספי מלא
+              View Full Finance Report
             </Button>
           </Link>
         </div>

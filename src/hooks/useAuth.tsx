@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     
     if (error) {
       toast({
-        title: "שגיאה בהתחברות",
+        title: "Error signing in",
         description: error.message,
         variant: "destructive",
       });
@@ -72,14 +72,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     
     if (error) {
       toast({
-        title: "שגיאה בהרשמה",
+        title: "Error signing up",
         description: error.message,
         variant: "destructive",
       });
     } else {
       toast({
-        title: "!החשבון נוצר בהצלחה",
-        description: "ברוך הבא ללוח הבקרה העסקי שלך.",
+        title: "Account created!",
+        description: "Welcome to your business dashboard.",
       });
     }
     
@@ -89,7 +89,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signOut = async () => {
     await supabase.auth.signOut();
     toast({
-      title: "התנתקת בהצלחה",
+      title: "Signed out successfully",
     });
   };
 
