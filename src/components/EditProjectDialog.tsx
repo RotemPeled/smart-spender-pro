@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Pencil } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -21,6 +22,7 @@ export const EditProjectDialog = ({ project, onUpdate }: EditProjectDialogProps)
   const [workStatus, setWorkStatus] = useState<"in_progress" | "ready" | "completed">(project.work_status);
   const [paymentStatus, setPaymentStatus] = useState<"paid" | "unpaid" | "pending">(project.payment_status);
   const [priority, setPriority] = useState<"high" | "medium" | "low">(project.priority);
+  const [isRetainer, setIsRetainer] = useState(project.is_retainer || false);
   const { toast } = useToast();
 
   const handleSubmit = () => {
@@ -38,10 +40,11 @@ export const EditProjectDialog = ({ project, onUpdate }: EditProjectDialogProps)
       client_name: clientName,
       description,
       price: parseFloat(price),
-      deadline: deadline || null,
+      deadline: isRetainer ? null : (deadline || null),
       work_status: workStatus,
       payment_status: paymentStatus,
       priority,
+      is_retainer: isRetainer,
     });
 
     setOpen(false);
@@ -114,17 +117,29 @@ export const EditProjectDialog = ({ project, onUpdate }: EditProjectDialogProps)
               onChange={(e) => setPrice(e.target.value)}
             />
           </div>
-          <div className="grid gap-2">
-            <label htmlFor="deadline" className="text-sm font-medium">
-              מועד אספקה
-            </label>
-            <Input
-              id="deadline"
-              type="date"
-              value={deadline}
-              onChange={(e) => setDeadline(e.target.value)}
+          <div className="flex items-center gap-2">
+            <Checkbox
+              id="retainer"
+              checked={isRetainer}
+              onCheckedChange={(checked) => setIsRetainer(checked as boolean)}
             />
+            <label htmlFor="retainer" className="text-sm font-medium cursor-pointer">
+              ריטיינר
+            </label>
           </div>
+          {!isRetainer && (
+            <div className="grid gap-2">
+              <label htmlFor="deadline" className="text-sm font-medium">
+                מועד אספקה
+              </label>
+              <Input
+                id="deadline"
+                type="date"
+                value={deadline}
+                onChange={(e) => setDeadline(e.target.value)}
+              />
+            </div>
+          )}
           <div className="grid gap-2">
             <label htmlFor="priority" className="text-sm font-medium">
               עדיפות

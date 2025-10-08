@@ -46,6 +46,8 @@ export type Database = {
           description: string | null
           id: string
           is_archived: boolean
+          is_retainer: boolean
+          last_retainer_generation: string | null
           name: string
           payment_status: Database["public"]["Enums"]["payment_status"]
           price: number
@@ -61,6 +63,8 @@ export type Database = {
           description?: string | null
           id?: string
           is_archived?: boolean
+          is_retainer?: boolean
+          last_retainer_generation?: string | null
           name: string
           payment_status?: Database["public"]["Enums"]["payment_status"]
           price?: number
@@ -76,6 +80,8 @@ export type Database = {
           description?: string | null
           id?: string
           is_archived?: boolean
+          is_retainer?: boolean
+          last_retainer_generation?: string | null
           name?: string
           payment_status?: Database["public"]["Enums"]["payment_status"]
           price?: number
@@ -140,7 +146,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_monthly_retainers: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
     }
     Enums: {
       payment_status: "paid" | "unpaid" | "pending"

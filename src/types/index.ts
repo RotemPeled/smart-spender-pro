@@ -18,4 +18,5 @@ export interface Project {
   payment_status: "paid" | "unpaid" | "pending";
   priority: "high" | "medium" | "low";
   is_archived: boolean;
+  is_retainer: boolean;
 }
