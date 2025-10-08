@@ -1,13 +1,14 @@
 import { Card } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
-import { Transaction } from "@/types";
+import { Transaction, Project } from "@/types";
 import { format } from "date-fns";
 
 interface FinanceChartProps {
   transactions: Transaction[];
+  projects?: Project[];
 }
 
-export const FinanceChart = ({ transactions }: FinanceChartProps) => {
+export const FinanceChart = ({ transactions, projects = [] }: FinanceChartProps) => {
   const monthlyData = transactions.reduce((acc, transaction) => {
     const transactionDate = typeof transaction.date === 'string' ? new Date(transaction.date) : transaction.date;
     const month = format(transactionDate, "MMM");
@@ -24,6 +25,20 @@ export const FinanceChart = ({ transactions }: FinanceChartProps) => {
     
     return acc;
   }, {} as Record<string, { month: string; income: number; expenses: number }>);
+
+  // Add paid projects to income
+  projects
+    .filter((p) => p.payment_status === "paid" && p.deadline)
+    .forEach((project) => {
+      const projectDate = new Date(project.deadline!);
+      const month = format(projectDate, "MMM");
+      
+      if (!monthlyData[month]) {
+        monthlyData[month] = { month, income: 0, expenses: 0 };
+      }
+      
+      monthlyData[month].income += Number(project.price);
+    });
 
   const chartData = Object.values(monthlyData);
 

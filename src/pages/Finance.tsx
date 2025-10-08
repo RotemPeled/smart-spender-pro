@@ -13,6 +13,7 @@ export default function Finance() {
   const { user } = useAuth();
   const [selectedMonth, setSelectedMonth] = useState(format(new Date(), "yyyy-MM"));
   const [transactions, setTransactions] = useState<any[]>([]);
+  const [projects, setProjects] = useState<any[]>([]);
   const [stats, setStats] = useState({
     totalIncome: 0,
     totalExpenses: 0,
@@ -59,6 +60,7 @@ export default function Finance() {
     const totalIncome = transactionIncome + paidProjectsIncome;
 
     setTransactions(transactions);
+    setProjects(projects || []);
     setStats({
       totalIncome,
       totalExpenses: expenses,
@@ -158,7 +160,7 @@ export default function Finance() {
       </div>
 
       {/* Chart */}
-      <FinanceChart transactions={transactions} />
+      <FinanceChart transactions={transactions} projects={projects} />
 
       {/* Transactions List */}
       <TransactionList transactions={transactions} onDelete={handleDeleteTransaction} />
