@@ -87,15 +87,15 @@ export default function Finance() {
   });
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 sm:space-y-8">
+      <div className="flex flex-col gap-3">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">כספים</h1>
-          <p className="text-muted-foreground mt-1">עקוב אחר ההכנסות וההוצאות שלך</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">כספים</h1>
+          <p className="text-sm text-muted-foreground mt-1">עקוב אחר ההכנסות וההוצאות שלך</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
           <Select value={selectedMonth} onValueChange={setSelectedMonth}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-full sm:w-[180px]">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -111,49 +111,49 @@ export default function Finance() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-6 md:grid-cols-3">
-        <Card className="p-6 bg-gradient-card shadow-elevation hover:shadow-glow transition-all">
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        <Card className="p-4 sm:p-6 bg-gradient-card shadow-elevation hover:shadow-glow transition-all">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">סך הכנסות</p>
-              <p className="text-3xl font-bold text-success mt-2">
+              <p className="text-xs sm:text-sm font-medium text-muted-foreground">סך הכנסות</p>
+              <p className="text-2xl sm:text-3xl font-bold text-success mt-1 sm:mt-2">
                 ₪{stats.totalIncome.toLocaleString()}
               </p>
             </div>
-            <div className="w-12 h-12 rounded-full bg-success/10 flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-success" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-success/10 flex items-center justify-center flex-shrink-0">
+              <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-success" />
             </div>
           </div>
         </Card>
 
-        <Card className="p-6 bg-gradient-card shadow-elevation hover:shadow-glow transition-all">
+        <Card className="p-4 sm:p-6 bg-gradient-card shadow-elevation hover:shadow-glow transition-all">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">סך הוצאות</p>
-              <p className="text-3xl font-bold text-destructive mt-2">
+              <p className="text-xs sm:text-sm font-medium text-muted-foreground">סך הוצאות</p>
+              <p className="text-2xl sm:text-3xl font-bold text-destructive mt-1 sm:mt-2">
                 ₪{stats.totalExpenses.toLocaleString()}
               </p>
             </div>
-            <div className="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center">
-              <TrendingDown className="w-6 h-6 text-destructive" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-destructive/10 flex items-center justify-center flex-shrink-0">
+              <TrendingDown className="w-5 h-5 sm:w-6 sm:h-6 text-destructive" />
             </div>
           </div>
         </Card>
 
-        <Card className="p-6 bg-gradient-card shadow-elevation hover:shadow-glow transition-all">
+        <Card className="p-4 sm:p-6 bg-gradient-card shadow-elevation hover:shadow-glow transition-all">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">רווח נקי</p>
+              <p className="text-xs sm:text-sm font-medium text-muted-foreground">רווח נקי</p>
               <p
-                className={`text-3xl font-bold mt-2 ${
+                className={`text-2xl sm:text-3xl font-bold mt-1 sm:mt-2 ${
                   stats.netProfit >= 0 ? "text-success" : "text-destructive"
                 }`}
               >
                 ₪{stats.netProfit.toLocaleString()}
               </p>
             </div>
-            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-              <DollarSign className="w-6 h-6 text-primary" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <DollarSign className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
             </div>
           </div>
         </Card>

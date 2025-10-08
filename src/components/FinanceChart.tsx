@@ -43,9 +43,9 @@ export const FinanceChart = ({ transactions, projects = [] }: FinanceChartProps)
   const chartData = Object.values(monthlyData);
 
   return (
-    <Card className="p-6 shadow-elevation col-span-full">
-      <h2 className="text-xl font-bold text-foreground mb-4">סקירה חודשית</h2>
-      <ResponsiveContainer width="100%" height={300}>
+    <Card className="p-4 sm:p-6 shadow-elevation col-span-full">
+      <h2 className="text-lg sm:text-xl font-bold text-foreground mb-3 sm:mb-4">סקירה חודשית</h2>
+      <ResponsiveContainer width="100%" height={250}>
         <BarChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
           <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" />

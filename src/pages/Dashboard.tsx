@@ -89,14 +89,14 @@ export default function Dashboard() {
   });
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 sm:space-y-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">לוח בקרה</h1>
-          <p className="text-muted-foreground mt-1">ברוך שובך! הנה סקירת המצב שלך.</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">לוח בקרה</h1>
+          <p className="text-sm text-muted-foreground mt-1">ברוך שובך! הנה סקירת המצב שלך.</p>
         </div>
         <Select value={selectedMonth} onValueChange={setSelectedMonth}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-full sm:w-[180px]">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -110,66 +110,67 @@ export default function Dashboard() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-6 md:grid-cols-3">
-        <Card className="p-6 bg-gradient-card shadow-elevation hover:shadow-glow transition-all">
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        <Card className="p-4 sm:p-6 bg-gradient-card shadow-elevation hover:shadow-glow transition-all">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">רווח כולל</p>
-              <p className={`text-3xl font-bold mt-2 ${
+              <p className="text-xs sm:text-sm font-medium text-muted-foreground">רווח כולל</p>
+              <p className={`text-2xl sm:text-3xl font-bold mt-1 sm:mt-2 ${
                 stats.netProfit >= 0 ? "text-success" : "text-destructive"
               }`}>
                 ₪{stats.netProfit.toLocaleString()}
               </p>
               <p className="text-xs text-muted-foreground mt-1">החודש</p>
             </div>
-            <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+            <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center flex-shrink-0 ${
               stats.netProfit >= 0 ? "bg-success/10" : "bg-destructive/10"
             }`}>
-              <TrendingUp className={`w-6 h-6 ${
+              <TrendingUp className={`w-5 h-5 sm:w-6 sm:h-6 ${
                 stats.netProfit >= 0 ? "text-success" : "text-destructive"
               }`} />
             </div>
           </div>
         </Card>
 
-        <Card className="p-6 bg-gradient-card shadow-elevation hover:shadow-glow transition-all">
+        <Card className="p-4 sm:p-6 bg-gradient-card shadow-elevation hover:shadow-glow transition-all">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">סכום לא משולם</p>
-              <p className="text-3xl font-bold text-primary mt-2">
+              <p className="text-xs sm:text-sm font-medium text-muted-foreground">סכום לא משולם</p>
+              <p className="text-2xl sm:text-3xl font-bold text-primary mt-1 sm:mt-2">
                 ₪{stats.unpaidAmount.toLocaleString()}
               </p>
               <p className="text-xs text-muted-foreground mt-1">תשלומים ממתינים</p>
             </div>
-            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-              <DollarSign className="w-6 h-6 text-primary" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <DollarSign className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
             </div>
           </div>
         </Card>
 
-        <Card className="p-6 bg-gradient-card shadow-elevation hover:shadow-glow transition-all">
+        <Card className="p-4 sm:p-6 bg-gradient-card shadow-elevation hover:shadow-glow transition-all">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">פרויקטים פעילים</p>
-              <p className="text-3xl font-bold text-foreground mt-2">
+              <p className="text-xs sm:text-sm font-medium text-muted-foreground">פרויקטים פעילים</p>
+              <p className="text-2xl sm:text-3xl font-bold text-foreground mt-1 sm:mt-2">
                 {stats.activeProjects}
               </p>
               <p className="text-xs text-muted-foreground mt-1">בתהליך</p>
             </div>
-            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-              <Briefcase className="w-6 h-6 text-primary" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <Briefcase className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
             </div>
           </div>
         </Card>
       </div>
 
       {/* Upcoming Deadlines */}
-      <Card className="p-6 shadow-elevation">
+      <Card className="p-4 sm:p-6 shadow-elevation">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-foreground">מועדי אספקה קרובים</h2>
+          <h2 className="text-lg sm:text-xl font-bold text-foreground">מועדי אספקה קרובים</h2>
           <Link to="/projects">
-            <Button variant="ghost" size="sm" className="gap-2">
-              הצג הכל <ArrowRight className="w-4 h-4" />
+            <Button variant="ghost" size="sm" className="gap-1 sm:gap-2 text-xs sm:text-sm">
+              <span className="hidden sm:inline">הצג הכל</span>
+              <ArrowRight className="w-4 h-4" />
             </Button>
           </Link>
         </div>
@@ -178,37 +179,37 @@ export default function Dashboard() {
             {upcomingDeadlines.map((project) => (
               <div
                 key={project.id}
-                className="flex items-center justify-between p-4 rounded-lg border border-border hover:bg-accent/50 transition-all"
+                className="flex items-center justify-between p-3 sm:p-4 rounded-lg border border-border hover:bg-accent/50 transition-all gap-2"
               >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-destructive/10 flex items-center justify-center">
-                    <AlertCircle className="w-5 h-5 text-destructive" />
+                <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-destructive/10 flex items-center justify-center flex-shrink-0">
+                    <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-destructive" />
                   </div>
-                  <div>
-                    <p className="font-semibold text-foreground">{project.name}</p>
-                    <p className="text-sm text-muted-foreground">{project.client_name}</p>
+                  <div className="min-w-0">
+                    <p className="font-semibold text-foreground text-sm sm:text-base truncate">{project.name}</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground truncate">{project.client_name}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <Calendar className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-foreground font-medium">
-                    {format(new Date(project.deadline), "MMM dd, yyyy")}
+                <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm flex-shrink-0">
+                  <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground hidden sm:block" />
+                  <span className="text-foreground font-medium whitespace-nowrap">
+                    {format(new Date(project.deadline), "MMM dd")}
                   </span>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <div className="text-center py-8 text-muted-foreground">
+          <div className="text-center py-6 sm:py-8 text-sm text-muted-foreground">
             אין מועדי אספקה קרובים ב-7 הימים הקרובים
           </div>
         )}
       </Card>
 
       {/* Quick Actions */}
-      <Card className="p-6 shadow-elevation">
-        <h2 className="text-xl font-bold text-foreground mb-4">פעולות מהירות</h2>
-        <div className="flex flex-wrap gap-3">
+      <Card className="p-4 sm:p-6 shadow-elevation">
+        <h2 className="text-lg sm:text-xl font-bold text-foreground mb-4">פעולות מהירות</h2>
+        <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-3">
           <Link to="/projects">
             <Button className="gap-2">
               <Briefcase className="w-4 h-4" />
