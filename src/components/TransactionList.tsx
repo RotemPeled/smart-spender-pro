@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowUpRight, ArrowDownRight, Calendar } from "lucide-react";
 import { Transaction } from "@/types";
 import { format } from "date-fns";
-import { he } from "date-fns/locale/he";
+import { he } from "date-fns/locale";
 
 interface TransactionListProps {
   transactions: Transaction[];

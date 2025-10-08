@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { AddProjectDialog } from "@/components/AddProjectDialog";
 import { format } from "date-fns";
-import { he } from "date-fns/locale/he";
+import { he } from "date-fns/locale";
 
 export default function Projects() {
   const { user } = useAuth();
