@@ -323,7 +323,7 @@ export default function Projects() {
                     <Button
                       variant="destructive"
                       size="icon"
-                      className="h-full w-20 rounded-none"
+                      className="h-full w-20 rounded-lg"
                       onClick={(e) => e.stopPropagation()}
                     >
                       <Trash2 className="w-5 h-5" />
