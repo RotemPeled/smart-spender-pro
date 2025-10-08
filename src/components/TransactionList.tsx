@@ -1,7 +1,8 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowUpRight, ArrowDownRight, Calendar } from "lucide-react";
-import { Transaction } from "./Dashboard";
+import { Transaction } from "@/types";
+import { format } from "date-fns";
 
 interface TransactionListProps {
   transactions: Transaction[];
@@ -39,7 +40,7 @@ export const TransactionList = ({ transactions }: TransactionListProps) => {
                   </Badge>
                   <span className="flex items-center gap-1 text-xs text-muted-foreground">
                     <Calendar className="w-3 h-3" />
-                    {transaction.date.toLocaleDateString()}
+                    {typeof transaction.date === 'string' ? format(new Date(transaction.date), "MMM dd, yyyy") : format(transaction.date, "MMM dd, yyyy")}
                   </span>
                 </div>
               </div>

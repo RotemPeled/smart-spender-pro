@@ -51,6 +51,13 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        chart: {
+          '1': 'hsl(var(--chart-1))',
+          '2': 'hsl(var(--chart-2))',
+          '3': 'hsl(var(--chart-3))',
+          '4': 'hsl(var(--chart-4))',
+          '5': 'hsl(var(--chart-5))'
+        }
       },
       backgroundImage: {
         'gradient-primary': 'var(--gradient-primary)',
@@ -61,7 +68,13 @@ export default {
         'glow': 'var(--shadow-glow)',
       },
       transitionProperty: {
-        'smooth': 'var(--transition-smooth)',
+        'smooth': 'all'
+      },
+      transitionDuration: {
+        'smooth': '300ms'
+      },
+      transitionTimingFunction: {
+        'smooth': 'cubic-bezier(0.4, 0, 0.2, 1)'
       },
       borderRadius: {
         lg: "var(--radius)",

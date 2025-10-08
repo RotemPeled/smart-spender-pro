@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
-import { Transaction } from "./Dashboard";
+import { Transaction } from "@/types";
+import { format } from "date-fns";
 
 interface FinanceChartProps {
   transactions: Transaction[];
@@ -8,16 +9,17 @@ interface FinanceChartProps {
 
 export const FinanceChart = ({ transactions }: FinanceChartProps) => {
   const monthlyData = transactions.reduce((acc, transaction) => {
-    const month = transaction.date.toLocaleDateString("en-US", { month: "short" });
+    const transactionDate = typeof transaction.date === 'string' ? new Date(transaction.date) : transaction.date;
+    const month = format(transactionDate, "MMM");
     
     if (!acc[month]) {
       acc[month] = { month, income: 0, expenses: 0 };
     }
     
     if (transaction.type === "income") {
-      acc[month].income += transaction.amount;
+      acc[month].income += Number(transaction.amount);
     } else {
-      acc[month].expenses += transaction.amount;
+      acc[month].expenses += Number(transaction.amount);
     }
     
     return acc;
