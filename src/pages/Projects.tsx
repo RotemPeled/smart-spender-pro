@@ -55,8 +55,27 @@ export default function Projects() {
   };
 
   const handleUpdateProject = async (projectId: string, projectData: any) => {
-    await supabase.from("projects").update(projectData).eq("id", projectId);
-    fetchProjects();
+    console.log("Updating project:", projectId, "with data:", projectData);
+    const { error } = await supabase
+      .from("projects")
+      .update(projectData)
+      .eq("id", projectId);
+    
+    if (error) {
+      console.error("Update error:", error);
+      toast({
+        title: "שגיאה",
+        description: "לא ניתן לעדכן את הפרויקט",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    await fetchProjects();
+    toast({
+      title: "הצלחה",
+      description: "הפרויקט עודכן בהצלחה",
+    });
   };
 
   const handleDeleteProject = async (projectId: string) => {
