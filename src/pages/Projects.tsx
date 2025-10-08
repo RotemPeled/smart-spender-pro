@@ -334,37 +334,39 @@ export default function Projects() {
                 </div>
               </div>
             </Card>
-            <div className="absolute left-0 top-0 bottom-0 w-20 flex items-center justify-center">
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button
-                    variant="destructive"
-                    size="icon"
-                    className="h-full w-20 rounded-none"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <Trash2 className="w-5 h-5" />
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent onClick={(e) => e.stopPropagation()}>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>האם אתה בטוח?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      פעולה זו תמחק את הפרויקט לצמיתות ולא ניתן לבטל אותה.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel onClick={() => setSwipedProject(null)}>ביטול</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => {
-                      handleDeleteProject(project.id);
-                      setSwipedProject(null);
-                    }}>
-                      מחק
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </div>
+            {swipedProject === project.id && (
+              <div className="absolute left-0 top-0 bottom-0 w-20 flex items-center justify-center animate-fade-in">
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      variant="destructive"
+                      size="icon"
+                      className="h-full w-20 rounded-none"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent onClick={(e) => e.stopPropagation()}>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>האם אתה בטוח?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        פעולה זו תמחק את הפרויקט לצמיתות ולא ניתן לבטל אותה.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel onClick={() => setSwipedProject(null)}>ביטול</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => {
+                        handleDeleteProject(project.id);
+                        setSwipedProject(null);
+                      }}>
+                        מחק
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
+            )}
           </div>
           ))
         )}
