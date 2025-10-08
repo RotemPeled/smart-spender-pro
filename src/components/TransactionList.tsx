@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpRight, ArrowDownRight, Calendar, Trash2 } from "lucide-react";
 import { Transaction } from "@/types";
 import { format } from "date-fns";
+import { he } from "date-fns/locale";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -53,7 +54,7 @@ export const TransactionList = ({ transactions, onDelete }: TransactionListProps
                   </Badge>
                   <span className="flex items-center gap-1 text-xs text-muted-foreground">
                     <Calendar className="w-3 h-3" />
-                    {typeof transaction.date === 'string' ? format(new Date(transaction.date), "MMM dd") : format(transaction.date, "MMM dd")}
+                    {typeof transaction.date === 'string' ? format(new Date(transaction.date), "d MMM", { locale: he }) : format(transaction.date, "d MMM", { locale: he })}
                   </span>
                 </div>
               </div>

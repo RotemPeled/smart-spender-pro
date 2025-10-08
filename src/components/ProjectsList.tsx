@@ -1,6 +1,8 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2, Circle, DollarSign, Calendar } from "lucide-react";
+import { format } from "date-fns";
+import { he } from "date-fns/locale";
 
 export interface Project {
   id: string;
@@ -45,7 +47,7 @@ export const ProjectsList = ({ projects }: ProjectsListProps) => {
                   <div className="flex items-center gap-2 mt-2">
                     <span className="flex items-center gap-1 text-xs text-muted-foreground">
                       <Calendar className="w-3 h-3" />
-                      {project.date.toLocaleDateString()}
+                      {format(project.date, "d MMM yyyy", { locale: he })}
                     </span>
                     <Badge
                       variant={project.isDone ? "default" : "secondary"}
