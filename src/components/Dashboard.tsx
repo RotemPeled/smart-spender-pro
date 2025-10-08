@@ -1,8 +1,11 @@
 import { Card } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DollarSign, TrendingUp, TrendingDown, Wallet } from "lucide-react";
 import { TransactionList } from "./TransactionList";
 import { FinanceChart } from "./FinanceChart";
 import { AddTransactionDialog } from "./AddTransactionDialog";
+import { ProjectsList, Project } from "./ProjectsList";
+import { AddProjectDialog } from "./AddProjectDialog";
 import { useState } from "react";
 
 export interface Transaction {
@@ -50,6 +53,27 @@ export const Dashboard = () => {
     },
   ]);
 
+  const [projects, setProjects] = useState<Project[]>([
+    {
+      id: "1",
+      name: "Website Redesign",
+      description: "Complete redesign of company website",
+      price: 5000,
+      date: new Date(2025, 9, 1),
+      isDone: true,
+      isPaid: true,
+    },
+    {
+      id: "2",
+      name: "Mobile App Development",
+      description: "iOS and Android app for client",
+      price: 12000,
+      date: new Date(2025, 9, 15),
+      isDone: false,
+      isPaid: false,
+    },
+  ]);
+
   const totalIncome = transactions
     .filter((t) => t.type === "income")
     .reduce((sum, t) => sum + t.amount, 0);
@@ -68,6 +92,14 @@ export const Dashboard = () => {
     setTransactions([newTransaction, ...transactions]);
   };
 
+  const handleAddProject = (project: Omit<Project, "id">) => {
+    const newProject = {
+      ...project,
+      id: Date.now().toString(),
+    };
+    setProjects([newProject, ...projects]);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border bg-card shadow-sm">
@@ -81,7 +113,10 @@ export const Dashboard = () => {
               <p className="text-sm text-muted-foreground">Business Finance Manager</p>
             </div>
           </div>
-          <AddTransactionDialog onAdd={handleAddTransaction} />
+          <div className="flex gap-2">
+            <AddTransactionDialog onAdd={handleAddTransaction} />
+            <AddProjectDialog onAdd={handleAddProject} />
+          </div>
         </div>
       </header>
 
@@ -137,7 +172,20 @@ export const Dashboard = () => {
           <FinanceChart transactions={transactions} />
         </div>
 
-        <TransactionList transactions={transactions} />
+        <Tabs defaultValue="transactions" className="w-full">
+          <TabsList className="grid w-full max-w-md grid-cols-2">
+            <TabsTrigger value="transactions">Transactions</TabsTrigger>
+            <TabsTrigger value="projects">Projects</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="transactions" className="mt-6">
+            <TransactionList transactions={transactions} />
+          </TabsContent>
+          
+          <TabsContent value="projects" className="mt-6">
+            <ProjectsList projects={projects} />
+          </TabsContent>
+        </Tabs>
       </main>
     </div>
   );
