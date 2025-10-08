@@ -32,6 +32,9 @@ export default function Projects() {
   const [projects, setProjects] = useState<any[]>([]);
   const [filter, setFilter] = useState<string>("all");
   const [editingProject, setEditingProject] = useState<any>(null);
+  const [swipedProject, setSwipedProject] = useState<string | null>(null);
+  const [touchStart, setTouchStart] = useState<number>(0);
+  const [touchEnd, setTouchEnd] = useState<number>(0);
 
   useEffect(() => {
     if (user) {
@@ -105,6 +108,46 @@ export default function Projects() {
     return colors[priority] || colors.medium;
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = (projectId: string) => {
+    if (touchStart - touchEnd > 75) {
+      // Swiped left
+      setSwipedProject(projectId);
+    }
+    if (touchStart - touchEnd < -75) {
+      // Swiped right - close
+      setSwipedProject(null);
+    }
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setTouchStart(e.clientX);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (touchStart) {
+      setTouchEnd(e.clientX);
+    }
+  };
+
+  const handleMouseUp = (projectId: string) => {
+    if (touchStart - touchEnd > 75) {
+      setSwipedProject(projectId);
+    }
+    if (touchStart - touchEnd < -75) {
+      setSwipedProject(null);
+    }
+    setTouchStart(0);
+    setTouchEnd(0);
+  };
+
   const filteredProjects = projects.filter((project) => {
     if (filter === "all") return true;
     if (filter === "active") return project.work_status === "in_progress";
@@ -166,11 +209,26 @@ export default function Projects() {
           </Card>
         ) : (
           filteredProjects.map((project) => (
-            <Card
-              key={project.id}
-              className="p-4 sm:p-6 shadow-elevation hover:shadow-glow transition-all cursor-pointer"
-              onClick={() => setEditingProject(project)}
-            >
+            <div key={project.id} className="relative overflow-hidden">
+              <Card
+                className={`p-4 sm:p-6 shadow-elevation hover:shadow-glow transition-all cursor-pointer ${
+                  swipedProject === project.id ? "-translate-x-20" : ""
+                }`}
+                style={{ transition: "transform 0.3s ease" }}
+                onClick={(e) => {
+                  if (swipedProject === project.id) {
+                    setSwipedProject(null);
+                  } else {
+                    setEditingProject(project);
+                  }
+                }}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={() => handleTouchEnd(project.id)}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={() => handleMouseUp(project.id)}
+              >
               <div className="flex flex-col gap-3 sm:gap-4">
                 <div className="flex items-start gap-3 sm:gap-4">
                   <div className="flex-1 min-w-0">
@@ -276,6 +334,38 @@ export default function Projects() {
                 </div>
               </div>
             </Card>
+            <div className="absolute left-0 top-0 bottom-0 w-20 flex items-center justify-center">
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    variant="destructive"
+                    size="icon"
+                    className="h-full w-20 rounded-none"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <Trash2 className="w-5 h-5" />
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent onClick={(e) => e.stopPropagation()}>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>האם אתה בטוח?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      פעולה זו תמחק את הפרויקט לצמיתות ולא ניתן לבטל אותה.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel onClick={() => setSwipedProject(null)}>ביטול</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => {
+                      handleDeleteProject(project.id);
+                      setSwipedProject(null);
+                    }}>
+                      מחק
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
+          </div>
           ))
         )}
       </div>
