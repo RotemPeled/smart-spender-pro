@@ -181,13 +181,14 @@ export default function Projects() {
                       
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Badge
+                          <Button
                             variant={project.work_status === "completed" ? "default" : "secondary"}
-                            className="text-xs cursor-pointer hover:opacity-80 flex items-center gap-1"
+                            size="sm"
+                            className="h-6 px-2 text-xs gap-1"
                           >
                             {project.work_status === "completed" ? "הושלם" : project.work_status === "in_progress" ? "בתהליך" : "מוכן"}
                             <ChevronDown className="w-3 h-3" />
-                          </Badge>
+                          </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="bg-background z-50">
                           <DropdownMenuItem onClick={() => handleUpdateProject(project.id, { work_status: "in_progress" })}>
@@ -204,13 +205,14 @@ export default function Projects() {
 
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Badge
-                            {...getPaymentBadge(project.payment_status)}
-                            className="text-xs cursor-pointer hover:opacity-80 flex items-center gap-1"
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            className={`h-6 px-2 text-xs gap-1 ${project.payment_status === "paid" ? "bg-success hover:bg-success/90" : ""}`}
                           >
                             {project.payment_status === "paid" ? "שולם" : project.payment_status === "pending" ? "ממתין" : "לא שולם"}
                             <ChevronDown className="w-3 h-3" />
-                          </Badge>
+                          </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="bg-background z-50">
                           <DropdownMenuItem onClick={() => handleUpdateProject(project.id, { payment_status: "unpaid" })}>
@@ -227,13 +229,14 @@ export default function Projects() {
 
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Badge
+                          <Button
                             variant="secondary"
-                            className={`text-xs cursor-pointer hover:opacity-80 flex items-center gap-1 ${getPriorityBadge(project.priority)}`}
+                            size="sm"
+                            className={`h-6 px-2 text-xs gap-1 ${getPriorityBadge(project.priority)}`}
                           >
                             עדיפות {project.priority === "high" ? "גבוהה" : project.priority === "medium" ? "בינונית" : "נמוכה"}
                             <ChevronDown className="w-3 h-3" />
-                          </Badge>
+                          </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="bg-background z-50">
                           <DropdownMenuItem onClick={() => handleUpdateProject(project.id, { priority: "low" })}>
