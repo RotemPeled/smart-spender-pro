@@ -25,8 +25,8 @@ export const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
   const handleSubmit = () => {
     if (!name || !price) {
       toast({
-        title: "Error",
-        description: "Please fill in all required fields",
+        title: "שגיאה",
+        description: "אנא מלא את כל השדות הנדרשים",
         variant: "destructive",
       });
       return;
@@ -55,8 +55,8 @@ export const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
     setOpen(false);
 
     toast({
-      title: "Success",
-      description: "Project added successfully",
+      title: "הצלחה",
+      description: "הפרויקט נוסף בהצלחה",
     });
   };
 
@@ -65,46 +65,46 @@ export const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
       <DialogTrigger asChild>
         <Button className="gap-2 shadow-glow">
           <Plus className="w-4 h-4" />
-          Add Project
+          הוסף פרויקט
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Add New Project</DialogTitle>
+          <DialogTitle>הוסף פרויקט חדש</DialogTitle>
           <DialogDescription>
-            Create a new project with details about the work and payment.
+            צור פרויקט חדש עם פרטים על העבודה והתשלום
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
             <label htmlFor="name" className="text-sm font-medium">
-              Project Name *
+              שם הפרויקט *
             </label>
             <Input
               id="name"
-              placeholder="Enter project name"
+              placeholder="הכנס שם פרויקט"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
           </div>
           <div className="grid gap-2">
             <label htmlFor="clientName" className="text-sm font-medium">
-              Client Name
+              שם הלקוח
             </label>
             <Input
               id="clientName"
-              placeholder="Enter client name"
+              placeholder="הכנס שם לקוח"
               value={clientName}
               onChange={(e) => setClientName(e.target.value)}
             />
           </div>
           <div className="grid gap-2">
             <label htmlFor="description" className="text-sm font-medium">
-              Description
+              תיאור
             </label>
             <Textarea
               id="description"
-              placeholder="Enter project description"
+              placeholder="הכנס תיאור פרויקט"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
@@ -112,7 +112,7 @@ export const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
           </div>
           <div className="grid gap-2">
             <label htmlFor="price" className="text-sm font-medium">
-              Price *
+              מחיר *
             </label>
             <Input
               id="price"
@@ -124,7 +124,7 @@ export const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
           </div>
           <div className="grid gap-2">
             <label htmlFor="deadline" className="text-sm font-medium">
-              Deadline
+              דדליין
             </label>
             <Input
               id="deadline"
@@ -135,7 +135,7 @@ export const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
           </div>
           <div className="grid gap-2">
             <label htmlFor="priority" className="text-sm font-medium">
-              Priority
+              עדיפות
             </label>
             <select
               id="priority"
@@ -143,14 +143,14 @@ export const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
               onChange={(e) => setPriority(e.target.value as any)}
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
             >
-              <option value="low">Low</option>
-              <option value="medium">Medium</option>
-              <option value="high">High</option>
+              <option value="low">נמוכה</option>
+              <option value="medium">בינונית</option>
+              <option value="high">גבוהה</option>
             </select>
           </div>
           <div className="grid gap-2">
             <label htmlFor="workStatus" className="text-sm font-medium">
-              Work Status
+              סטטוס עבודה
             </label>
             <select
               id="workStatus"
@@ -158,14 +158,14 @@ export const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
               onChange={(e) => setWorkStatus(e.target.value as any)}
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
             >
-              <option value="in_progress">In Progress</option>
-              <option value="ready">Ready</option>
-              <option value="completed">Completed</option>
+              <option value="in_progress">בתהליך</option>
+              <option value="ready">מוכן</option>
+              <option value="completed">הושלם</option>
             </select>
           </div>
           <div className="grid gap-2">
             <label htmlFor="paymentStatus" className="text-sm font-medium">
-              Payment Status
+              סטטוס תשלום
             </label>
             <select
               id="paymentStatus"
@@ -173,17 +173,17 @@ export const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
               onChange={(e) => setPaymentStatus(e.target.value as any)}
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
             >
-              <option value="unpaid">Unpaid</option>
-              <option value="pending">Pending</option>
-              <option value="paid">Paid</option>
+              <option value="unpaid">לא שולם</option>
+              <option value="pending">ממתין</option>
+              <option value="paid">שולם</option>
             </select>
           </div>
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => setOpen(false)}>
-            Cancel
+            ביטול
           </Button>
-          <Button onClick={handleSubmit}>Add Project</Button>
+          <Button onClick={handleSubmit}>הוסף פרויקט</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -2,11 +2,12 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Calendar, DollarSign, CheckCircle2, Circle, XCircle } from "lucide-react";
+import { Plus, Calendar, DollarSign, CheckCircle2, Circle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { AddProjectDialog } from "@/components/AddProjectDialog";
 import { format } from "date-fns";
+import { he } from "date-fns/locale";
 
 export default function Projects() {
   const { user } = useAuth();
@@ -64,6 +65,33 @@ export default function Projects() {
     return colors[priority] || colors.medium;
   };
 
+  const translateWorkStatus = (status: string) => {
+    const translations: Record<string, string> = {
+      in_progress: "בתהליך",
+      ready: "מוכן",
+      completed: "הושלם"
+    };
+    return translations[status] || status;
+  };
+
+  const translatePaymentStatus = (status: string) => {
+    const translations: Record<string, string> = {
+      paid: "שולם",
+      unpaid: "לא שולם",
+      pending: "ממתין"
+    };
+    return translations[status] || status;
+  };
+
+  const translatePriority = (priority: string) => {
+    const translations: Record<string, string> = {
+      high: "גבוהה",
+      medium: "בינונית",
+      low: "נמוכה"
+    };
+    return translations[priority] || priority;
+  };
+
   const filteredProjects = projects.filter((project) => {
     if (filter === "all") return true;
     if (filter === "active") return project.work_status === "in_progress";
@@ -75,8 +103,8 @@ export default function Projects() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Projects</h1>
-          <p className="text-muted-foreground mt-1">Manage all your client projects</p>
+          <h1 className="text-3xl font-bold text-foreground">פרויקטים</h1>
+          <p className="text-muted-foreground mt-1">נהל את כל פרויקטי הלקוחות שלך</p>
         </div>
         <AddProjectDialog onAdd={handleAddProject} />
       </div>
@@ -88,21 +116,21 @@ export default function Projects() {
           size="sm"
           onClick={() => setFilter("all")}
         >
-          All
+          הכל
         </Button>
         <Button
           variant={filter === "active" ? "default" : "outline"}
           size="sm"
           onClick={() => setFilter("active")}
         >
-          Active
+          פעילים
         </Button>
         <Button
           variant={filter === "unpaid" ? "default" : "outline"}
           size="sm"
           onClick={() => setFilter("unpaid")}
         >
-          Unpaid
+          לא שולם
         </Button>
       </div>
 
@@ -115,9 +143,9 @@ export default function Projects() {
                 <Plus className="w-8 h-8 text-primary" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-foreground">No projects yet</h3>
+                <h3 className="text-lg font-semibold text-foreground">עדיין אין פרויקטים</h3>
                 <p className="text-muted-foreground mt-1">
-                  Create your first project to get started
+                  צור את הפרויקט הראשון שלך כדי להתחיל
                 </p>
               </div>
               <AddProjectDialog onAdd={handleAddProject} />
@@ -139,13 +167,13 @@ export default function Projects() {
                       <div>
                         <h3 className="text-lg font-bold text-foreground">{project.name}</h3>
                         <p className="text-sm text-muted-foreground mt-1">
-                          {project.client_name || "No client"}
+                          {project.client_name || "אין לקוח"}
                         </p>
                       </div>
                       <div className="text-right flex-shrink-0">
                         <div className="flex items-center gap-2 text-xl font-bold text-foreground">
                           <DollarSign className="w-5 h-5 text-primary" />
-                          {Number(project.price).toLocaleString()}
+                          ₪{Number(project.price).toLocaleString()}
                         </div>
                       </div>
                     </div>
@@ -158,7 +186,7 @@ export default function Projects() {
                       {project.deadline && (
                         <div className="flex items-center gap-1 text-xs text-muted-foreground">
                           <Calendar className="w-3 h-3" />
-                          {format(new Date(project.deadline), "MMM dd, yyyy")}
+                          {format(new Date(project.deadline), "dd MMM, yyyy", { locale: he })}
                         </div>
                       )}
                       <Badge
@@ -167,19 +195,19 @@ export default function Projects() {
                         }
                         className="text-xs"
                       >
-                        {project.work_status.replace("_", " ")}
+                        {translateWorkStatus(project.work_status)}
                       </Badge>
                       <Badge
                         {...getPaymentBadge(project.payment_status)}
                         className="text-xs"
                       >
-                        {project.payment_status}
+                        {translatePaymentStatus(project.payment_status)}
                       </Badge>
                       <Badge
                         variant="secondary"
                         className={`text-xs ${getPriorityBadge(project.priority)}`}
                       >
-                        {project.priority} priority
+                        עדיפות {translatePriority(project.priority)}
                       </Badge>
                     </div>
                   </div>
