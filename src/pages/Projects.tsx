@@ -2,10 +2,11 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Calendar, DollarSign, CheckCircle2, Circle, XCircle } from "lucide-react";
+import { Plus, Calendar, CheckCircle2, Circle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { AddProjectDialog } from "@/components/AddProjectDialog";
+import { EditProjectDialog } from "@/components/EditProjectDialog";
 import { format } from "date-fns";
 
 export default function Projects() {
@@ -32,6 +33,11 @@ export default function Projects() {
 
   const handleAddProject = async (projectData: any) => {
     await supabase.from("projects").insert([{ ...projectData, user_id: user?.id }]);
+    fetchProjects();
+  };
+
+  const handleUpdateProject = async (projectId: string, projectData: any) => {
+    await supabase.from("projects").update(projectData).eq("id", projectId);
     fetchProjects();
   };
 
@@ -180,6 +186,9 @@ export default function Projects() {
                       >
                         עדיפות {project.priority === "high" ? "גבוהה" : project.priority === "medium" ? "בינונית" : "נמוכה"}
                       </Badge>
+                    </div>
+                    <div className="mt-3">
+                      <EditProjectDialog project={project} onUpdate={handleUpdateProject} />
                     </div>
                   </div>
                 </div>
