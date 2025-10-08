@@ -14,7 +14,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { AddProjectDialog } from "@/components/AddProjectDialog";
 import { EditProjectDialog } from "@/components/EditProjectDialog";
 import { format } from "date-fns";
-import { he } from "date-fns/locale";
+import { he } from "date-fns/locale/he";
 import {
   AlertDialog,
   AlertDialogAction,

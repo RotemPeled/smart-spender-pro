@@ -5,7 +5,7 @@ import { DollarSign, TrendingUp, TrendingDown, Plus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { format, startOfMonth, endOfMonth } from "date-fns";
-import { he } from "date-fns/locale";
+import { he } from "date-fns/locale/he";
 import { AddTransactionDialog } from "@/components/AddTransactionDialog";
 import { TransactionList } from "@/components/TransactionList";
 import { FinanceChart } from "@/components/FinanceChart";

@@ -2,7 +2,7 @@ import { Card } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { Transaction, Project } from "@/types";
 import { format } from "date-fns";
-import { he } from "date-fns/locale";
+import { he } from "date-fns/locale/he";
 
 interface FinanceChartProps {
   transactions: Transaction[];
