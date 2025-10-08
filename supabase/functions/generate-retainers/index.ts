@@ -6,51 +6,43 @@ const corsHeaders = {
 }
 
 Deno.serve(async (req) => {
-  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-    )
-
-    console.log('Starting monthly retainer generation...')
+    console.log('Starting monthly retainer generation...');
+    
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Call the database function to generate retainers
-    const { error } = await supabase.rpc('generate_monthly_retainers')
+    const { error } = await supabase.rpc('generate_monthly_retainers');
 
     if (error) {
-      console.error('Error generating retainers:', error)
-      return new Response(
-        JSON.stringify({ error: error.message }),
-        { 
-          status: 500,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        }
-      )
+      console.error('Error generating retainers:', error);
+      throw error;
     }
 
-    console.log('Monthly retainer generation completed successfully')
+    console.log('Successfully generated monthly retainers');
 
     return new Response(
       JSON.stringify({ success: true, message: 'Retainers generated successfully' }),
       { 
-        status: 200,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 200 
       }
-    )
+    );
   } catch (error) {
-    console.error('Unexpected error:', error)
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+    console.error('Error in generate-retainers function:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
     return new Response(
       JSON.stringify({ error: errorMessage }),
       { 
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 500 
       }
-    )
+    );
   }
-})
+});

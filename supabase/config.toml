@@ -1,1 +1,4 @@
 project_id = "ecxjatxoyjipkzweuykj"
+
+[functions.generate-retainers]
+verify_jwt = false
