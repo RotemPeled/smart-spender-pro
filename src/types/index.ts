@@ -19,4 +19,5 @@ export interface Project {
   priority: "high" | "medium" | "low";
   is_archived: boolean;
   is_retainer: boolean;
+  last_retainer_generation: string | null;
 }
