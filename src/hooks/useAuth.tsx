@@ -31,12 +31,43 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     );
 
-    // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
+    // Check for existing session or auto-login
+    const initAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (session) {
+        setSession(session);
+        setUser(session.user);
+        setLoading(false);
+      } else {
+        // Auto-login with default user
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: 'user@financetrack.app',
+          password: 'financetrack123',
+        });
+        
+        if (error) {
+          console.error('Auto-login error:', error);
+          // If user doesn't exist, create it
+          const { error: signUpError } = await supabase.auth.signUp({
+            email: 'user@financetrack.app',
+            password: 'financetrack123',
+          });
+          
+          if (!signUpError) {
+            // Try to sign in again after signup
+            await supabase.auth.signInWithPassword({
+              email: 'user@financetrack.app',
+              password: 'financetrack123',
+            });
+          }
+        }
+        
+        setLoading(false);
+      }
+    };
+    
+    initAuth();
 
     return () => subscription.unsubscribe();
   }, []);
