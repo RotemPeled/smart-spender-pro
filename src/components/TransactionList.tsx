@@ -1,14 +1,27 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowUpRight, ArrowDownRight, Calendar } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ArrowUpRight, ArrowDownRight, Calendar, Trash2 } from "lucide-react";
 import { Transaction } from "@/types";
 import { format } from "date-fns";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface TransactionListProps {
   transactions: Transaction[];
+  onDelete?: (id: string) => void;
 }
 
-export const TransactionList = ({ transactions }: TransactionListProps) => {
+export const TransactionList = ({ transactions, onDelete }: TransactionListProps) => {
   return (
     <Card className="p-6 shadow-elevation">
       <h2 className="text-xl font-bold text-foreground mb-4">עסקאות אחרונות</h2>
@@ -45,12 +58,37 @@ export const TransactionList = ({ transactions }: TransactionListProps) => {
                 </div>
               </div>
             </div>
-            <div
-              className={`text-lg font-bold ${
-                transaction.type === "income" ? "text-success" : "text-destructive"
-              }`}
-            >
-              {transaction.type === "income" ? "+" : "-"}₪{transaction.amount.toLocaleString()}
+            <div className="flex items-center gap-3">
+              <div
+                className={`text-lg font-bold ${
+                  transaction.type === "income" ? "text-success" : "text-destructive"
+                }`}
+              >
+                {transaction.type === "income" ? "+" : "-"}₪{transaction.amount.toLocaleString()}
+              </div>
+              {onDelete && (
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <Trash2 className="w-4 h-4 text-destructive" />
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>האם אתה בטוח?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        פעולה זו תמחק את העסקה לצמיתות ולא ניתן לבטל אותה.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>ביטול</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => onDelete(transaction.id)}>
+                        מחק
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              )}
             </div>
           </div>
         ))}

@@ -2,12 +2,24 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Calendar, CheckCircle2, Circle } from "lucide-react";
+import { Plus, Calendar, CheckCircle2, Circle, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { AddProjectDialog } from "@/components/AddProjectDialog";
 import { EditProjectDialog } from "@/components/EditProjectDialog";
 import { format } from "date-fns";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { toast } from "@/hooks/use-toast";
 
 export default function Projects() {
   const { user } = useAuth();
@@ -38,6 +50,14 @@ export default function Projects() {
 
   const handleUpdateProject = async (projectId: string, projectData: any) => {
     await supabase.from("projects").update(projectData).eq("id", projectId);
+    fetchProjects();
+  };
+
+  const handleDeleteProject = async (projectId: string) => {
+    await supabase.from("projects").delete().eq("id", projectId);
+    toast({
+      title: "הפרויקט נמחק בהצלחה",
+    });
     fetchProjects();
   };
 
@@ -187,8 +207,30 @@ export default function Projects() {
                         עדיפות {project.priority === "high" ? "גבוהה" : project.priority === "medium" ? "בינונית" : "נמוכה"}
                       </Badge>
                     </div>
-                    <div className="mt-3">
+                    <div className="mt-3 flex gap-2">
                       <EditProjectDialog project={project} onUpdate={handleUpdateProject} />
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="outline" size="sm">
+                            <Trash2 className="w-4 h-4 ml-2" />
+                            מחק
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>האם אתה בטוח?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              פעולה זו תמחק את הפרויקט לצמיתות ולא ניתן לבטל אותה.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>ביטול</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => handleDeleteProject(project.id)}>
+                              מחק
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </div>
                   </div>
                 </div>

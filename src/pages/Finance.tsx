@@ -73,6 +73,11 @@ export default function Finance() {
     fetchTransactions();
   };
 
+  const handleDeleteTransaction = async (transactionId: string) => {
+    await supabase.from("transactions").delete().eq("id", transactionId);
+    fetchTransactions();
+  };
+
   const monthOptions = Array.from({ length: 12 }, (_, i) => {
     const date = new Date();
     date.setMonth(date.getMonth() - i);
@@ -156,7 +161,7 @@ export default function Finance() {
       <FinanceChart transactions={transactions} />
 
       {/* Transactions List */}
-      <TransactionList transactions={transactions} />
+      <TransactionList transactions={transactions} onDelete={handleDeleteTransaction} />
 
       {/* Bank API Placeholder */}
       <Card className="p-8 text-center shadow-elevation">
