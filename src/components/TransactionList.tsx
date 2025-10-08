@@ -11,7 +11,7 @@ interface TransactionListProps {
 export const TransactionList = ({ transactions }: TransactionListProps) => {
   return (
     <Card className="p-6 shadow-elevation">
-      <h2 className="text-xl font-bold text-foreground mb-4">Recent Transactions</h2>
+      <h2 className="text-xl font-bold text-foreground mb-4">עסקאות אחרונות</h2>
       <div className="space-y-3">
         {transactions.map((transaction) => (
           <div
@@ -50,7 +50,7 @@ export const TransactionList = ({ transactions }: TransactionListProps) => {
                 transaction.type === "income" ? "text-success" : "text-destructive"
               }`}
             >
-              {transaction.type === "income" ? "+" : "-"}${transaction.amount.toLocaleString()}
+              {transaction.type === "income" ? "+" : "-"}₪{transaction.amount.toLocaleString()}
             </div>
           </div>
         ))}

@@ -12,8 +12,8 @@ interface AddTransactionDialogProps {
   onAdd: (transaction: Omit<Transaction, "id">) => void;
 }
 
-const incomeCategories = ["Salary", "Freelance", "Investment", "Business", "Other Income"];
-const expenseCategories = ["Rent", "Utilities", "Marketing", "Equipment", "Travel", "Software", "Other Expense"];
+const incomeCategories = ["משכורת", "עבודה עצמאית", "השקעה", "עסק", "הכנסה אחרת"];
+const expenseCategories = ["שכירות", "חשמל ומים", "שיווק", "ציוד", "נסיעות", "תוכנה", "הוצאה אחרת"];
 
 export const AddTransactionDialog = ({ onAdd }: AddTransactionDialogProps) => {
   const [open, setOpen] = useState(false);
@@ -27,7 +27,7 @@ export const AddTransactionDialog = ({ onAdd }: AddTransactionDialogProps) => {
     e.preventDefault();
     
     if (!amount || !category || !description) {
-      toast.error("Please fill in all fields");
+      toast.error("נא למלא את כל השדות");
       return;
     }
 
@@ -39,7 +39,7 @@ export const AddTransactionDialog = ({ onAdd }: AddTransactionDialogProps) => {
       date: new Date(date),
     });
 
-    toast.success("Transaction added successfully!");
+    toast.success("העסקה נוספה בהצלחה!");
     setOpen(false);
     setAmount("");
     setCategory("");
@@ -54,29 +54,29 @@ export const AddTransactionDialog = ({ onAdd }: AddTransactionDialogProps) => {
       <DialogTrigger asChild>
         <Button className="gap-2 shadow-glow">
           <Plus className="w-4 h-4" />
-          Add Transaction
+          הוסף עסקה
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Add New Transaction</DialogTitle>
+          <DialogTitle>הוסף עסקה חדשה</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           <div className="space-y-2">
-            <Label htmlFor="type">Type</Label>
+            <Label htmlFor="type">סוג</Label>
             <Select value={type} onValueChange={(value: "income" | "expense") => setType(value)}>
               <SelectTrigger id="type">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="income">Income</SelectItem>
-                <SelectItem value="expense">Expense</SelectItem>
+                <SelectItem value="income">הכנסה</SelectItem>
+                <SelectItem value="expense">הוצאה</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="amount">Amount</Label>
+            <Label htmlFor="amount">סכום</Label>
             <Input
               id="amount"
               type="number"
@@ -89,10 +89,10 @@ export const AddTransactionDialog = ({ onAdd }: AddTransactionDialogProps) => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="category">Category</Label>
+            <Label htmlFor="category">קטגוריה</Label>
             <Select value={category} onValueChange={setCategory}>
               <SelectTrigger id="category">
-                <SelectValue placeholder="Select category" />
+                <SelectValue placeholder="בחר קטגוריה" />
               </SelectTrigger>
               <SelectContent>
                 {categories.map((cat) => (
@@ -105,17 +105,17 @@ export const AddTransactionDialog = ({ onAdd }: AddTransactionDialogProps) => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">תיאור</Label>
             <Input
               id="description"
-              placeholder="Enter description"
+              placeholder="הזן תיאור"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="date">Date</Label>
+            <Label htmlFor="date">תאריך</Label>
             <Input
               id="date"
               type="date"
@@ -126,10 +126,10 @@ export const AddTransactionDialog = ({ onAdd }: AddTransactionDialogProps) => {
 
           <div className="flex gap-3 pt-4">
             <Button type="button" variant="outline" className="flex-1" onClick={() => setOpen(false)}>
-              Cancel
+              ביטול
             </Button>
             <Button type="submit" className="flex-1">
-              Add Transaction
+              הוסף עסקה
             </Button>
           </div>
         </form>

@@ -19,11 +19,11 @@ interface ProjectsListProps {
 export const ProjectsList = ({ projects }: ProjectsListProps) => {
   return (
     <Card className="p-6 shadow-elevation">
-      <h2 className="text-xl font-bold text-foreground mb-4">Projects</h2>
+      <h2 className="text-xl font-bold text-foreground mb-4">פרויקטים</h2>
       <div className="space-y-3">
         {projects.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
-            No projects yet. Add your first project to get started!
+            אין עדיין פרויקטים. הוסף את הפרויקט הראשון שלך כדי להתחיל!
           </div>
         ) : (
           projects.map((project) => (
@@ -51,20 +51,19 @@ export const ProjectsList = ({ projects }: ProjectsListProps) => {
                       variant={project.isDone ? "default" : "secondary"}
                       className="text-xs"
                     >
-                      {project.isDone ? "Completed" : "In Progress"}
+                      {project.isDone ? "הושלם" : "בתהליך"}
                     </Badge>
                     <Badge
                       variant={project.isPaid ? "default" : "secondary"}
                       className={`text-xs ${project.isPaid ? "bg-success" : ""}`}
                     >
-                      {project.isPaid ? "Paid" : "Unpaid"}
+                      {project.isPaid ? "שולם" : "לא שולם"}
                     </Badge>
                   </div>
                 </div>
               </div>
               <div className="flex items-center gap-2 text-lg font-bold text-foreground">
-                <DollarSign className="w-5 h-5 text-primary" />
-                {project.price.toLocaleString()}
+                ₪{project.price.toLocaleString()}
               </div>
             </div>
           ))

@@ -11,9 +11,9 @@ export const Layout = ({ children }: LayoutProps) => {
   const location = useLocation();
 
   const navItems = [
-    { path: "/", label: "Dashboard", icon: LayoutDashboard },
-    { path: "/projects", label: "Projects", icon: Briefcase },
-    { path: "/finance", label: "Finance", icon: DollarSign },
+    { path: "/", label: "לוח בקרה", icon: LayoutDashboard },
+    { path: "/projects", label: "פרויקטים", icon: Briefcase },
+    { path: "/finance", label: "כספים", icon: DollarSign },
   ];
 
   return (
@@ -27,7 +27,7 @@ export const Layout = ({ children }: LayoutProps) => {
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-foreground">FinanceTrack</h1>
-                <p className="text-xs text-muted-foreground">Business Finance Manager</p>
+                <p className="text-xs text-muted-foreground">מערכת ניהול כספים לעסק</p>
               </div>
             </Link>
 

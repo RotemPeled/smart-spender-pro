@@ -29,7 +29,7 @@ export const FinanceChart = ({ transactions }: FinanceChartProps) => {
 
   return (
     <Card className="p-6 shadow-elevation col-span-full">
-      <h2 className="text-xl font-bold text-foreground mb-4">Monthly Overview</h2>
+      <h2 className="text-xl font-bold text-foreground mb-4">סקירה חודשית</h2>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -44,8 +44,8 @@ export const FinanceChart = ({ transactions }: FinanceChartProps) => {
             labelStyle={{ color: "hsl(var(--foreground))" }}
           />
           <Legend />
-          <Bar dataKey="income" fill="hsl(var(--success))" radius={[8, 8, 0, 0]} />
-          <Bar dataKey="expenses" fill="hsl(var(--destructive))" radius={[8, 8, 0, 0]} />
+          <Bar dataKey="income" fill="hsl(var(--success))" radius={[8, 8, 0, 0]} name="הכנסות" />
+          <Bar dataKey="expenses" fill="hsl(var(--destructive))" radius={[8, 8, 0, 0]} name="הוצאות" />
         </BarChart>
       </ResponsiveContainer>
     </Card>
