@@ -17,9 +17,6 @@ export const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [deadline, setDeadline] = useState("");
-  const [workStatus, setWorkStatus] = useState<"in_progress" | "ready" | "completed">("in_progress");
-  const [paymentStatus, setPaymentStatus] = useState<"paid" | "unpaid" | "pending">("unpaid");
-  const [priority, setPriority] = useState<"high" | "medium" | "low">("medium");
   const { toast } = useToast();
 
   const handleSubmit = () => {
@@ -38,9 +35,9 @@ export const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
       description,
       price: parseFloat(price),
       deadline: deadline || null,
-      work_status: workStatus,
-      payment_status: paymentStatus,
-      priority,
+      work_status: "in_progress",
+      payment_status: "unpaid",
+      priority: "medium",
     });
 
     // Reset form
@@ -49,9 +46,6 @@ export const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
     setDescription("");
     setPrice("");
     setDeadline("");
-    setWorkStatus("in_progress");
-    setPaymentStatus("unpaid");
-    setPriority("medium");
     setOpen(false);
 
     toast({
@@ -132,51 +126,6 @@ export const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
               value={deadline}
               onChange={(e) => setDeadline(e.target.value)}
             />
-          </div>
-          <div className="grid gap-2">
-            <label htmlFor="priority" className="text-sm font-medium">
-              עדיפות
-            </label>
-            <select
-              id="priority"
-              value={priority}
-              onChange={(e) => setPriority(e.target.value as any)}
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-            >
-              <option value="low">נמוכה</option>
-              <option value="medium">בינונית</option>
-              <option value="high">גבוהה</option>
-            </select>
-          </div>
-          <div className="grid gap-2">
-            <label htmlFor="workStatus" className="text-sm font-medium">
-              סטטוס עבודה
-            </label>
-            <select
-              id="workStatus"
-              value={workStatus}
-              onChange={(e) => setWorkStatus(e.target.value as any)}
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-            >
-              <option value="in_progress">בתהליך</option>
-              <option value="ready">מוכן</option>
-              <option value="completed">הושלם</option>
-            </select>
-          </div>
-          <div className="grid gap-2">
-            <label htmlFor="paymentStatus" className="text-sm font-medium">
-              סטטוס תשלום
-            </label>
-            <select
-              id="paymentStatus"
-              value={paymentStatus}
-              onChange={(e) => setPaymentStatus(e.target.value as any)}
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-            >
-              <option value="unpaid">לא שולם</option>
-              <option value="pending">ממתין</option>
-              <option value="paid">שולם</option>
-            </select>
           </div>
         </div>
         <DialogFooter>

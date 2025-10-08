@@ -3,6 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Calendar, CheckCircle2, Circle, Trash2 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { AddProjectDialog } from "@/components/AddProjectDialog";
@@ -186,26 +192,74 @@ export default function Projects() {
                           {format(new Date(project.deadline), "MMM dd, yyyy")}
                         </div>
                       )}
-                      <Badge
-                        variant={
-                          project.work_status === "completed" ? "default" : "secondary"
-                        }
-                        className="text-xs"
-                      >
-                        {project.work_status === "completed" ? "הושלם" : project.work_status === "in_progress" ? "בתהליך" : "מוכן"}
-                      </Badge>
-                      <Badge
-                        {...getPaymentBadge(project.payment_status)}
-                        className="text-xs"
-                      >
-                        {project.payment_status === "paid" ? "שולם" : project.payment_status === "pending" ? "ממתין" : "לא שולם"}
-                      </Badge>
-                      <Badge
-                        variant="secondary"
-                        className={`text-xs ${getPriorityBadge(project.priority)}`}
-                      >
-                        עדיפות {project.priority === "high" ? "גבוהה" : project.priority === "medium" ? "בינונית" : "נמוכה"}
-                      </Badge>
+                      
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Badge
+                            variant={
+                              project.work_status === "completed" ? "default" : "secondary"
+                            }
+                            className="text-xs cursor-pointer hover:opacity-80"
+                          >
+                            {project.work_status === "completed" ? "הושלם" : project.work_status === "in_progress" ? "בתהליך" : "מוכן"}
+                          </Badge>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="bg-background">
+                          <DropdownMenuItem onClick={() => handleUpdateProject(project.id, { work_status: "in_progress" })}>
+                            בתהליך
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleUpdateProject(project.id, { work_status: "ready" })}>
+                            מוכן
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleUpdateProject(project.id, { work_status: "completed" })}>
+                            הושלם
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Badge
+                            {...getPaymentBadge(project.payment_status)}
+                            className="text-xs cursor-pointer hover:opacity-80"
+                          >
+                            {project.payment_status === "paid" ? "שולם" : project.payment_status === "pending" ? "ממתין" : "לא שולם"}
+                          </Badge>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="bg-background">
+                          <DropdownMenuItem onClick={() => handleUpdateProject(project.id, { payment_status: "unpaid" })}>
+                            לא שולם
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleUpdateProject(project.id, { payment_status: "pending" })}>
+                            ממתין
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleUpdateProject(project.id, { payment_status: "paid" })}>
+                            שולם
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Badge
+                            variant="secondary"
+                            className={`text-xs cursor-pointer hover:opacity-80 ${getPriorityBadge(project.priority)}`}
+                          >
+                            עדיפות {project.priority === "high" ? "גבוהה" : project.priority === "medium" ? "בינונית" : "נמוכה"}
+                          </Badge>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="bg-background">
+                          <DropdownMenuItem onClick={() => handleUpdateProject(project.id, { priority: "low" })}>
+                            נמוכה
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleUpdateProject(project.id, { priority: "medium" })}>
+                            בינונית
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleUpdateProject(project.id, { priority: "high" })}>
+                            גבוהה
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
                     <div className="mt-3 flex gap-2">
                       <EditProjectDialog project={project} onUpdate={handleUpdateProject} />
