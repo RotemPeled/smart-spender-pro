@@ -1,7 +1,14 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Plus, Calendar, Trash2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Plus, Calendar, Trash2, ChevronDown } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { AddProjectDialog } from "@/components/AddProjectDialog";
@@ -58,6 +65,24 @@ export default function Projects() {
       title: "הפרויקט נמחק בהצלחה",
     });
     fetchProjects();
+  };
+
+  const getPaymentBadge = (paymentStatus: string) => {
+    const variants: Record<string, any> = {
+      paid: { variant: "default", className: "bg-success" },
+      unpaid: { variant: "secondary" },
+      pending: { variant: "secondary", className: "bg-primary/20" },
+    };
+    return variants[paymentStatus] || variants.unpaid;
+  };
+
+  const getPriorityBadge = (priority: string) => {
+    const colors: Record<string, string> = {
+      high: "bg-destructive",
+      medium: "bg-primary",
+      low: "bg-muted",
+    };
+    return colors[priority] || colors.medium;
   };
 
   const filteredProjects = projects.filter((project) => {
@@ -146,97 +171,82 @@ export default function Projects() {
                         {project.description}
                       </p>
                     )}
-                    {project.deadline && (
-                      <div className="flex items-center gap-1 text-xs text-muted-foreground mt-2">
-                        <Calendar className="w-3 h-3" />
-                        {format(new Date(project.deadline), "MMM dd, yyyy")}
-                      </div>
-                    )}
-                    
-                    <div className="mt-3 space-y-2">
-                      <div className="flex flex-wrap items-center gap-1.5">
-                        <span className="text-xs text-muted-foreground">סטטוס עבודה:</span>
-                        <Button
-                          variant={project.work_status === "in_progress" ? "default" : "outline"}
-                          size="sm"
-                          className="h-6 px-2 text-xs"
-                          onClick={() => handleUpdateProject(project.id, { work_status: "in_progress" })}
-                        >
-                          בתהליך
-                        </Button>
-                        <Button
-                          variant={project.work_status === "ready" ? "default" : "outline"}
-                          size="sm"
-                          className="h-6 px-2 text-xs"
-                          onClick={() => handleUpdateProject(project.id, { work_status: "ready" })}
-                        >
-                          מוכן
-                        </Button>
-                        <Button
-                          variant={project.work_status === "completed" ? "default" : "outline"}
-                          size="sm"
-                          className="h-6 px-2 text-xs"
-                          onClick={() => handleUpdateProject(project.id, { work_status: "completed" })}
-                        >
-                          הושלם
-                        </Button>
-                      </div>
+                    <div className="flex flex-wrap items-center gap-2 mt-3">
+                      {project.deadline && (
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <Calendar className="w-3 h-3" />
+                          {format(new Date(project.deadline), "MMM dd, yyyy")}
+                        </div>
+                      )}
+                      
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Badge
+                            variant={project.work_status === "completed" ? "default" : "secondary"}
+                            className="text-xs cursor-pointer hover:opacity-80 flex items-center gap-1"
+                          >
+                            {project.work_status === "completed" ? "הושלם" : project.work_status === "in_progress" ? "בתהליך" : "מוכן"}
+                            <ChevronDown className="w-3 h-3" />
+                          </Badge>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="bg-background z-50">
+                          <DropdownMenuItem onClick={() => handleUpdateProject(project.id, { work_status: "in_progress" })}>
+                            בתהליך
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleUpdateProject(project.id, { work_status: "ready" })}>
+                            מוכן
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleUpdateProject(project.id, { work_status: "completed" })}>
+                            הושלם
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
 
-                      <div className="flex flex-wrap items-center gap-1.5">
-                        <span className="text-xs text-muted-foreground">תשלום:</span>
-                        <Button
-                          variant={project.payment_status === "unpaid" ? "default" : "outline"}
-                          size="sm"
-                          className="h-6 px-2 text-xs"
-                          onClick={() => handleUpdateProject(project.id, { payment_status: "unpaid" })}
-                        >
-                          לא שולם
-                        </Button>
-                        <Button
-                          variant={project.payment_status === "pending" ? "default" : "outline"}
-                          size="sm"
-                          className="h-6 px-2 text-xs"
-                          onClick={() => handleUpdateProject(project.id, { payment_status: "pending" })}
-                        >
-                          ממתין
-                        </Button>
-                        <Button
-                          variant={project.payment_status === "paid" ? "default" : "outline"}
-                          size="sm"
-                          className="h-6 px-2 text-xs bg-success hover:bg-success/90"
-                          onClick={() => handleUpdateProject(project.id, { payment_status: "paid" })}
-                        >
-                          שולם
-                        </Button>
-                      </div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Badge
+                            {...getPaymentBadge(project.payment_status)}
+                            className="text-xs cursor-pointer hover:opacity-80 flex items-center gap-1"
+                          >
+                            {project.payment_status === "paid" ? "שולם" : project.payment_status === "pending" ? "ממתין" : "לא שולם"}
+                            <ChevronDown className="w-3 h-3" />
+                          </Badge>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="bg-background z-50">
+                          <DropdownMenuItem onClick={() => handleUpdateProject(project.id, { payment_status: "unpaid" })}>
+                            לא שולם
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleUpdateProject(project.id, { payment_status: "pending" })}>
+                            ממתין
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleUpdateProject(project.id, { payment_status: "paid" })}>
+                            שולם
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
 
-                      <div className="flex flex-wrap items-center gap-1.5">
-                        <span className="text-xs text-muted-foreground">עדיפות:</span>
-                        <Button
-                          variant={project.priority === "low" ? "default" : "outline"}
-                          size="sm"
-                          className="h-6 px-2 text-xs"
-                          onClick={() => handleUpdateProject(project.id, { priority: "low" })}
-                        >
-                          נמוכה
-                        </Button>
-                        <Button
-                          variant={project.priority === "medium" ? "default" : "outline"}
-                          size="sm"
-                          className="h-6 px-2 text-xs"
-                          onClick={() => handleUpdateProject(project.id, { priority: "medium" })}
-                        >
-                          בינונית
-                        </Button>
-                        <Button
-                          variant={project.priority === "high" ? "default" : "outline"}
-                          size="sm"
-                          className="h-6 px-2 text-xs bg-destructive hover:bg-destructive/90"
-                          onClick={() => handleUpdateProject(project.id, { priority: "high" })}
-                        >
-                          גבוהה
-                        </Button>
-                      </div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Badge
+                            variant="secondary"
+                            className={`text-xs cursor-pointer hover:opacity-80 flex items-center gap-1 ${getPriorityBadge(project.priority)}`}
+                          >
+                            עדיפות {project.priority === "high" ? "גבוהה" : project.priority === "medium" ? "בינונית" : "נמוכה"}
+                            <ChevronDown className="w-3 h-3" />
+                          </Badge>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="bg-background z-50">
+                          <DropdownMenuItem onClick={() => handleUpdateProject(project.id, { priority: "low" })}>
+                            נמוכה
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleUpdateProject(project.id, { priority: "medium" })}>
+                            בינונית
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleUpdateProject(project.id, { priority: "high" })}>
+                            גבוהה
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
                     <div className="mt-3 flex gap-2">
                       <EditProjectDialog project={project} onUpdate={handleUpdateProject} />
