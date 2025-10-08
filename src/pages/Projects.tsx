@@ -317,7 +317,7 @@ export default function Projects() {
               </div>
             </Card>
             {swipedProject === project.id && (
-              <div className="absolute right-0 top-0 bottom-0 w-20 flex items-center justify-center animate-fade-in">
+              <div className="absolute left-0 top-0 bottom-0 w-20 flex items-center justify-center animate-fade-in">
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button
