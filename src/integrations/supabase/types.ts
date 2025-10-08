@@ -14,7 +14,127 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      projects: {
+        Row: {
+          client_name: string | null
+          created_at: string
+          deadline: string | null
+          description: string | null
+          id: string
+          is_archived: boolean
+          name: string
+          payment_status: Database["public"]["Enums"]["payment_status"]
+          price: number
+          priority: Database["public"]["Enums"]["priority"]
+          updated_at: string
+          user_id: string
+          work_status: Database["public"]["Enums"]["work_status"]
+        }
+        Insert: {
+          client_name?: string | null
+          created_at?: string
+          deadline?: string | null
+          description?: string | null
+          id?: string
+          is_archived?: boolean
+          name: string
+          payment_status?: Database["public"]["Enums"]["payment_status"]
+          price?: number
+          priority?: Database["public"]["Enums"]["priority"]
+          updated_at?: string
+          user_id: string
+          work_status?: Database["public"]["Enums"]["work_status"]
+        }
+        Update: {
+          client_name?: string | null
+          created_at?: string
+          deadline?: string | null
+          description?: string | null
+          id?: string
+          is_archived?: boolean
+          name?: string
+          payment_status?: Database["public"]["Enums"]["payment_status"]
+          price?: number
+          priority?: Database["public"]["Enums"]["priority"]
+          updated_at?: string
+          user_id?: string
+          work_status?: Database["public"]["Enums"]["work_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "projects_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transactions: {
+        Row: {
+          amount: number
+          category: string
+          created_at: string
+          date: string
+          description: string | null
+          id: string
+          type: Database["public"]["Enums"]["transaction_type"]
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          category: string
+          created_at?: string
+          date?: string
+          description?: string | null
+          id?: string
+          type: Database["public"]["Enums"]["transaction_type"]
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          category?: string
+          created_at?: string
+          date?: string
+          description?: string | null
+          id?: string
+          type?: Database["public"]["Enums"]["transaction_type"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +143,10 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      payment_status: "paid" | "unpaid" | "pending"
+      priority: "high" | "medium" | "low"
+      transaction_type: "income" | "expense"
+      work_status: "in_progress" | "ready" | "completed"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +273,11 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      payment_status: ["paid", "unpaid", "pending"],
+      priority: ["high", "medium", "low"],
+      transaction_type: ["income", "expense"],
+      work_status: ["in_progress", "ready", "completed"],
+    },
   },
 } as const
