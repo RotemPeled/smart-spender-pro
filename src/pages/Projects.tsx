@@ -117,35 +117,19 @@ export default function Projects() {
   };
 
   const handleTouchEnd = (projectId: string) => {
-    if (touchStart - touchEnd > 75) {
-      // Swiped left
+    if (touchStart - touchEnd < -75) {
+      // Swiped right (left to right)
       setSwipedProject(projectId);
     }
-    if (touchStart - touchEnd < -75) {
-      // Swiped right - close
+    if (touchStart - touchEnd > 75) {
+      // Swiped left - close
       setSwipedProject(null);
     }
   };
 
-  const handleMouseDown = (e: React.MouseEvent) => {
-    setTouchStart(e.clientX);
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (touchStart) {
-      setTouchEnd(e.clientX);
-    }
-  };
-
-  const handleMouseUp = (projectId: string) => {
-    if (touchStart - touchEnd > 75) {
-      setSwipedProject(projectId);
-    }
-    if (touchStart - touchEnd < -75) {
-      setSwipedProject(null);
-    }
-    setTouchStart(0);
-    setTouchEnd(0);
+  const handleContextMenu = (e: React.MouseEvent, projectId: string) => {
+    e.preventDefault();
+    setSwipedProject(swipedProject === projectId ? null : projectId);
   };
 
   const filteredProjects = projects.filter((project) => {
@@ -212,7 +196,7 @@ export default function Projects() {
             <div key={project.id} className="relative overflow-hidden">
               <Card
                 className={`p-4 sm:p-6 shadow-elevation hover:shadow-glow transition-all cursor-pointer ${
-                  swipedProject === project.id ? "-translate-x-20" : ""
+                  swipedProject === project.id ? "translate-x-20" : ""
                 }`}
                 style={{ transition: "transform 0.3s ease" }}
                 onClick={(e) => {
@@ -222,12 +206,10 @@ export default function Projects() {
                     setEditingProject(project);
                   }
                 }}
+                onContextMenu={(e) => handleContextMenu(e, project.id)}
                 onTouchStart={handleTouchStart}
                 onTouchMove={handleTouchMove}
                 onTouchEnd={() => handleTouchEnd(project.id)}
-                onMouseDown={handleMouseDown}
-                onMouseMove={handleMouseMove}
-                onMouseUp={() => handleMouseUp(project.id)}
               >
               <div className="flex flex-col gap-3 sm:gap-4">
                 <div className="flex items-start gap-3 sm:gap-4">
@@ -335,7 +317,7 @@ export default function Projects() {
               </div>
             </Card>
             {swipedProject === project.id && (
-              <div className="absolute left-0 top-0 bottom-0 w-20 flex items-center justify-center animate-fade-in">
+              <div className="absolute right-0 top-0 bottom-0 w-20 flex items-center justify-center animate-fade-in">
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button
