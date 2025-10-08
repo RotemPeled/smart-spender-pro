@@ -12,7 +12,7 @@ export default function Dashboard() {
   const { user } = useAuth();
   const [selectedMonth, setSelectedMonth] = useState(format(new Date(), "yyyy-MM"));
   const [stats, setStats] = useState({
-    totalIncome: 0,
+    netProfit: 0,
     unpaidAmount: 0,
     activeProjects: 0,
   });
@@ -40,6 +40,10 @@ export default function Dashboard() {
       ?.filter((t) => t.type === "income")
       .reduce((sum, t) => sum + Number(t.amount), 0) || 0;
 
+    const transactionExpenses = transactions
+      ?.filter((t) => t.type === "expense")
+      .reduce((sum, t) => sum + Number(t.amount), 0) || 0;
+
     // Fetch projects
     const { data: projects } = await supabase
       .from("projects")
@@ -53,6 +57,7 @@ export default function Dashboard() {
       .reduce((sum, p) => sum + Number(p.price), 0) || 0;
 
     const totalIncome = transactionIncome + paidProjectsIncome;
+    const netProfit = totalIncome - transactionExpenses;
 
     const unpaid = projects
       ?.filter((p) => p.payment_status === "unpaid" || p.payment_status === "pending")
@@ -73,7 +78,7 @@ export default function Dashboard() {
       .sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime())
       .slice(0, 3) || [];
 
-    setStats({ totalIncome, unpaidAmount: unpaid, activeProjects: active });
+    setStats({ netProfit, unpaidAmount: unpaid, activeProjects: active });
     setUpcomingDeadlines(upcoming);
   };
 
@@ -109,14 +114,20 @@ export default function Dashboard() {
         <Card className="p-6 bg-gradient-card shadow-elevation hover:shadow-glow transition-all">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">סך הכנסות</p>
-              <p className="text-3xl font-bold text-success mt-2">
-                ₪{stats.totalIncome.toLocaleString()}
+              <p className="text-sm font-medium text-muted-foreground">רווח כולל</p>
+              <p className={`text-3xl font-bold mt-2 ${
+                stats.netProfit >= 0 ? "text-success" : "text-destructive"
+              }`}>
+                ₪{stats.netProfit.toLocaleString()}
               </p>
               <p className="text-xs text-muted-foreground mt-1">החודש</p>
             </div>
-            <div className="w-12 h-12 rounded-full bg-success/10 flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-success" />
+            <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+              stats.netProfit >= 0 ? "bg-success/10" : "bg-destructive/10"
+            }`}>
+              <TrendingUp className={`w-6 h-6 ${
+                stats.netProfit >= 0 ? "text-success" : "text-destructive"
+              }`} />
             </div>
           </div>
         </Card>

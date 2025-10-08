@@ -49,7 +49,10 @@ export const FinanceChart = ({ transactions, projects = [] }: FinanceChartProps)
         <BarChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
           <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" />
-          <YAxis stroke="hsl(var(--muted-foreground))" />
+          <YAxis 
+            stroke="hsl(var(--muted-foreground))" 
+            tickFormatter={(value) => `₪${value.toLocaleString()}`}
+          />
           <Tooltip
             contentStyle={{
               backgroundColor: "hsl(var(--card))",
@@ -57,6 +60,7 @@ export const FinanceChart = ({ transactions, projects = [] }: FinanceChartProps)
               borderRadius: "var(--radius)",
             }}
             labelStyle={{ color: "hsl(var(--foreground))" }}
+            formatter={(value: number) => [`₪${value.toLocaleString()}`, ""]}
           />
           <Legend />
           <Bar dataKey="income" fill="hsl(var(--success))" radius={[8, 8, 0, 0]} name="הכנסות" />
