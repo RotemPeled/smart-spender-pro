@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DollarSign, TrendingUp, TrendingDown, Wallet } from "lucide-react";
+import { DollarSign, TrendingUp, TrendingDown, Wallet, LayoutDashboard, Briefcase } from "lucide-react";
 import { TransactionList } from "./TransactionList";
 import { FinanceChart } from "./FinanceChart";
 import { AddTransactionDialog } from "./AddTransactionDialog";
@@ -100,6 +100,8 @@ export const Dashboard = () => {
     setProjects([newProject, ...projects]);
   };
 
+  const [activeTab, setActiveTab] = useState("dashboard");
+
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border bg-card shadow-sm">
@@ -113,76 +115,83 @@ export const Dashboard = () => {
               <p className="text-sm text-muted-foreground">Business Finance Manager</p>
             </div>
           </div>
-          <div className="flex gap-2">
+          {activeTab === "dashboard" ? (
             <AddTransactionDialog onAdd={handleAddTransaction} />
+          ) : (
             <AddProjectDialog onAdd={handleAddProject} />
-          </div>
+          )}
         </div>
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        <div className="grid gap-6 md:grid-cols-3 mb-8">
-          <Card className="p-6 bg-gradient-card border-border shadow-elevation hover:shadow-glow transition-smooth">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Total Income</p>
-                <p className="text-3xl font-bold text-success mt-2">
-                  ${totalIncome.toLocaleString()}
-                </p>
-                <p className="text-xs text-muted-foreground mt-1">This month</p>
-              </div>
-              <div className="w-12 h-12 rounded-full bg-success/10 flex items-center justify-center">
-                <TrendingUp className="w-6 h-6 text-success" />
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-6 bg-gradient-card border-border shadow-elevation hover:shadow-glow transition-smooth">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Total Expenses</p>
-                <p className="text-3xl font-bold text-destructive mt-2">
-                  ${totalExpenses.toLocaleString()}
-                </p>
-                <p className="text-xs text-muted-foreground mt-1">This month</p>
-              </div>
-              <div className="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center">
-                <TrendingDown className="w-6 h-6 text-destructive" />
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-6 bg-gradient-card border-border shadow-elevation hover:shadow-glow transition-smooth">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Net Balance</p>
-                <p className={`text-3xl font-bold mt-2 ${netBalance >= 0 ? "text-success" : "text-destructive"}`}>
-                  ${netBalance.toLocaleString()}
-                </p>
-                <p className="text-xs text-muted-foreground mt-1">This month</p>
-              </div>
-              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                <DollarSign className="w-6 h-6 text-primary" />
-              </div>
-            </div>
-          </Card>
-        </div>
-
-        <div className="grid gap-6 lg:grid-cols-2 mb-8">
-          <FinanceChart transactions={transactions} />
-        </div>
-
-        <Tabs defaultValue="transactions" className="w-full">
-          <TabsList className="grid w-full max-w-md grid-cols-2">
-            <TabsTrigger value="transactions">Transactions</TabsTrigger>
-            <TabsTrigger value="projects">Projects</TabsTrigger>
+        <Tabs defaultValue="dashboard" className="w-full" onValueChange={setActiveTab}>
+          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-8">
+            <TabsTrigger value="dashboard" className="gap-2">
+              <LayoutDashboard className="w-4 h-4" />
+              Dashboard
+            </TabsTrigger>
+            <TabsTrigger value="projects" className="gap-2">
+              <Briefcase className="w-4 h-4" />
+              Projects
+            </TabsTrigger>
           </TabsList>
           
-          <TabsContent value="transactions" className="mt-6">
+          <TabsContent value="dashboard" className="mt-0">
+            <div className="grid gap-6 md:grid-cols-3 mb-8">
+              <Card className="p-6 bg-gradient-card border-border shadow-elevation hover:shadow-glow transition-smooth">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">Total Income</p>
+                    <p className="text-3xl font-bold text-success mt-2">
+                      ${totalIncome.toLocaleString()}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">This month</p>
+                  </div>
+                  <div className="w-12 h-12 rounded-full bg-success/10 flex items-center justify-center">
+                    <TrendingUp className="w-6 h-6 text-success" />
+                  </div>
+                </div>
+              </Card>
+
+              <Card className="p-6 bg-gradient-card border-border shadow-elevation hover:shadow-glow transition-smooth">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">Total Expenses</p>
+                    <p className="text-3xl font-bold text-destructive mt-2">
+                      ${totalExpenses.toLocaleString()}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">This month</p>
+                  </div>
+                  <div className="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center">
+                    <TrendingDown className="w-6 h-6 text-destructive" />
+                  </div>
+                </div>
+              </Card>
+
+              <Card className="p-6 bg-gradient-card border-border shadow-elevation hover:shadow-glow transition-smooth">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">Net Balance</p>
+                    <p className={`text-3xl font-bold mt-2 ${netBalance >= 0 ? "text-success" : "text-destructive"}`}>
+                      ${netBalance.toLocaleString()}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">This month</p>
+                  </div>
+                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                    <DollarSign className="w-6 h-6 text-primary" />
+                  </div>
+                </div>
+              </Card>
+            </div>
+
+            <div className="grid gap-6 lg:grid-cols-2 mb-8">
+              <FinanceChart transactions={transactions} />
+            </div>
+
             <TransactionList transactions={transactions} />
           </TabsContent>
           
-          <TabsContent value="projects" className="mt-6">
+          <TabsContent value="projects" className="mt-0">
             <ProjectsList projects={projects} />
           </TabsContent>
         </Tabs>
