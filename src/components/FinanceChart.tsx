@@ -51,7 +51,8 @@ export const FinanceChart = ({ transactions, projects = [] }: FinanceChartProps)
           <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" />
           <YAxis 
             stroke="hsl(var(--muted-foreground))" 
-            tickFormatter={(value) => `₪${value.toLocaleString()}`}
+            tick={false}
+            axisLine={false}
           />
           <Tooltip
             contentStyle={{
