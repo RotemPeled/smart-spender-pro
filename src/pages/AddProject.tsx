@@ -82,6 +82,7 @@ export default function AddProject() {
               <Input
                 id="price"
                 type="number"
+                inputMode="numeric"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
                 placeholder="0"

@@ -109,7 +109,7 @@ export default function Projects() {
     if (filter === "all") return true;
     if (filter === "active") return project.work_status === "in_progress";
     if (filter === "unpaid") return project.payment_status === "unpaid";
-    if (filter === "completed-unpaid") return project.work_status === "completed" && project.payment_status !== "paid";
+    if (filter === "completed-unpaid") return (project.work_status === "ready" || project.work_status === "completed") && project.payment_status !== "paid";
     return true;
   });
 
