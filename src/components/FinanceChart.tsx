@@ -1,8 +1,9 @@
 import { Card } from "@/components/ui/card";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { Transaction, Project } from "@/types";
 import { format } from "date-fns";
 import { he } from "date-fns/locale";
+import { TrendingUp, TrendingDown } from "lucide-react";
 
 interface FinanceChartProps {
   transactions: Transaction[];
@@ -43,32 +44,131 @@ export const FinanceChart = ({ transactions, projects = [] }: FinanceChartProps)
 
   const chartData = Object.values(monthlyData);
 
+  const totalIncome = chartData.reduce((sum, item) => sum + item.income, 0);
+  const totalExpenses = chartData.reduce((sum, item) => sum + item.expenses, 0);
+  const netBalance = totalIncome - totalExpenses;
+
   return (
-    <Card className="p-4 sm:p-6 shadow-elevation col-span-full">
-      <h2 className="text-lg sm:text-xl font-bold text-foreground mb-3 sm:mb-4">סקירה חודשית</h2>
-      <ResponsiveContainer width="100%" height={250}>
-        <BarChart data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-          <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" />
-          <YAxis 
-            stroke="hsl(var(--muted-foreground))" 
-            tick={false}
-            axisLine={false}
-          />
-          <Tooltip
-            contentStyle={{
-              backgroundColor: "hsl(var(--card))",
-              border: "1px solid hsl(var(--border))",
-              borderRadius: "var(--radius)",
-            }}
-            labelStyle={{ color: "hsl(var(--foreground))" }}
-            formatter={(value: number) => [`₪${value.toLocaleString()}`, ""]}
-          />
-          <Legend />
-          <Bar dataKey="income" fill="hsl(var(--success))" radius={[8, 8, 0, 0]} name="הכנסות" />
-          <Bar dataKey="expenses" fill="hsl(var(--destructive))" radius={[8, 8, 0, 0]} name="הוצאות" />
-        </BarChart>
-      </ResponsiveContainer>
+    <Card className="p-6 sm:p-8 shadow-elevation rounded-2xl border border-border/50 transition-all duration-300">
+      <div className="mb-6">
+        <h2 className="text-xl sm:text-2xl font-semibold text-foreground tracking-tight mb-4">סקירה פינסית</h2>
+        
+        {/* Summary Cards */}
+        <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-6">
+          <div className="bg-success/5 rounded-xl p-3 sm:p-4 border border-success/10">
+            <div className="flex items-center gap-2 mb-1">
+              <div className="w-2 h-2 rounded-full bg-success"></div>
+              <p className="text-xs sm:text-sm text-muted-foreground">הכנסות</p>
+            </div>
+            <p className="text-lg sm:text-xl font-semibold text-success">
+              ₪{totalIncome.toLocaleString()}
+            </p>
+          </div>
+          
+          <div className="bg-destructive/5 rounded-xl p-3 sm:p-4 border border-destructive/10">
+            <div className="flex items-center gap-2 mb-1">
+              <div className="w-2 h-2 rounded-full bg-destructive"></div>
+              <p className="text-xs sm:text-sm text-muted-foreground">הוצאות</p>
+            </div>
+            <p className="text-lg sm:text-xl font-semibold text-destructive">
+              ₪{totalExpenses.toLocaleString()}
+            </p>
+          </div>
+          
+          <div className={`rounded-xl p-3 sm:p-4 border ${netBalance >= 0 ? 'bg-primary/5 border-primary/10' : 'bg-destructive/5 border-destructive/10'}`}>
+            <div className="flex items-center gap-2 mb-1">
+              {netBalance >= 0 ? (
+                <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 text-primary" />
+              ) : (
+                <TrendingDown className="w-3 h-3 sm:w-4 sm:h-4 text-destructive" />
+              )}
+              <p className="text-xs sm:text-sm text-muted-foreground">יתרה</p>
+            </div>
+            <p className={`text-lg sm:text-xl font-semibold ${netBalance >= 0 ? 'text-primary' : 'text-destructive'}`}>
+              ₪{netBalance.toLocaleString()}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Chart */}
+      <div className="bg-accent/20 rounded-xl p-4 sm:p-5">
+        <ResponsiveContainer width="100%" height={280}>
+          <BarChart 
+            data={chartData}
+            margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+          >
+            <defs>
+              <linearGradient id="incomeGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="hsl(var(--success))" stopOpacity={0.9} />
+                <stop offset="100%" stopColor="hsl(var(--success))" stopOpacity={0.6} />
+              </linearGradient>
+              <linearGradient id="expenseGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="hsl(var(--destructive))" stopOpacity={0.9} />
+                <stop offset="100%" stopColor="hsl(var(--destructive))" stopOpacity={0.6} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid 
+              strokeDasharray="3 3" 
+              stroke="hsl(var(--border))" 
+              opacity={0.3}
+              vertical={false}
+            />
+            <XAxis 
+              dataKey="month" 
+              stroke="hsl(var(--muted-foreground))"
+              tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
+              axisLine={{ stroke: "hsl(var(--border))", opacity: 0.3 }}
+              tickLine={false}
+            />
+            <YAxis 
+              stroke="hsl(var(--muted-foreground))" 
+              tick={false}
+              axisLine={false}
+              tickLine={false}
+            />
+            <Tooltip
+              cursor={{ fill: "hsl(var(--accent))", opacity: 0.1 }}
+              contentStyle={{
+                backgroundColor: "hsl(var(--popover))",
+                border: "1px solid hsl(var(--border))",
+                borderRadius: "12px",
+                padding: "12px",
+                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+              }}
+              labelStyle={{ 
+                color: "hsl(var(--foreground))", 
+                fontWeight: 600,
+                marginBottom: "8px"
+              }}
+              itemStyle={{ 
+                color: "hsl(var(--foreground))",
+                padding: "4px 0"
+              }}
+              formatter={(value: number, name: string) => {
+                const label = name === "income" ? "הכנסות" : "הוצאות";
+                return [`₪${value.toLocaleString()}`, label];
+              }}
+            />
+            <Bar 
+              dataKey="income" 
+              fill="url(#incomeGradient)"
+              radius={[12, 12, 0, 0]} 
+              maxBarSize={50}
+              animationDuration={800}
+              animationEasing="ease-in-out"
+            />
+            <Bar 
+              dataKey="expenses" 
+              fill="url(#expenseGradient)"
+              radius={[12, 12, 0, 0]} 
+              maxBarSize={50}
+              animationDuration={800}
+              animationEasing="ease-in-out"
+            />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
     </Card>
   );
 };
