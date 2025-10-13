@@ -129,15 +129,9 @@ export default function Projects() {
 
   return (
     <div className="space-y-6 sm:space-y-10 animate-fade-in">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl sm:text-4xl font-semibold text-foreground tracking-tight">פרויקטים</h1>
-          <p className="text-base text-muted-foreground mt-2">נהל את כל פרויקטי הלקוחות שלך</p>
-        </div>
-        <Button onClick={() => navigate('/projects/add')} className="shadow-sm hover:shadow-elevation transition-all duration-200">
-          <Plus className="w-4 h-4 ml-2" />
-          הוסף פרויקט
-        </Button>
+      <div>
+        <h1 className="text-3xl sm:text-4xl font-semibold text-foreground tracking-tight">פרויקטים</h1>
+        <p className="text-base text-muted-foreground mt-2">נהל את כל פרויקטי הלקוחות שלך</p>
       </div>
 
       {/* Filters */}

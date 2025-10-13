@@ -10,6 +10,7 @@ import { format, startOfMonth, endOfMonth } from "date-fns";
 import { he } from "date-fns/locale";
 import { useIsMobile } from "@/hooks/use-mobile";
 import QuickActionFab from "@/components/QuickActionFab";
+import { FinanceChart } from "@/components/FinanceChart";
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -22,6 +23,8 @@ export default function Dashboard() {
     activeProjects: 0,
   });
   const [upcomingDeadlines, setUpcomingDeadlines] = useState<any[]>([]);
+  const [transactions, setTransactions] = useState<any[]>([]);
+  const [projects, setProjects] = useState<any[]>([]);
 
   useEffect(() => {
     if (user) {
@@ -85,6 +88,8 @@ export default function Dashboard() {
 
     setStats({ netProfit, unpaidAmount: unpaid, activeProjects: active });
     setUpcomingDeadlines(upcoming);
+    setTransactions(transactions || []);
+    setProjects(projects || []);
   };
 
   const monthOptions = Array.from({ length: 12 }, (_, i) => {
@@ -194,6 +199,9 @@ export default function Dashboard() {
           </div>
         </Card>
       </div>
+
+      {/* Financial Chart */}
+      <FinanceChart transactions={transactions} projects={projects} />
 
       {/* Upcoming Deadlines - Only show on desktop */}
       {!isMobile && (
