@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -30,12 +31,20 @@ import { toast } from "@/hooks/use-toast";
 
 export default function Projects() {
   const { user } = useAuth();
+  const [searchParams] = useSearchParams();
   const [projects, setProjects] = useState<any[]>([]);
   const [filter, setFilter] = useState<string>("all");
   const [editingProject, setEditingProject] = useState<any>(null);
   const [swipedProject, setSwipedProject] = useState<string | null>(null);
   const [touchStart, setTouchStart] = useState<number>(0);
   const [touchEnd, setTouchEnd] = useState<number>(0);
+
+  useEffect(() => {
+    const urlFilter = searchParams.get('filter');
+    if (urlFilter) {
+      setFilter(urlFilter);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     if (user) {
@@ -137,6 +146,7 @@ export default function Projects() {
     if (filter === "all") return true;
     if (filter === "active") return project.work_status === "in_progress";
     if (filter === "unpaid") return project.payment_status === "unpaid";
+    if (filter === "completed-unpaid") return project.work_status === "completed" && project.payment_status !== "paid";
     return true;
   });
 
@@ -172,6 +182,13 @@ export default function Projects() {
           onClick={() => setFilter("unpaid")}
         >
           לא שולם
+        </Button>
+        <Button
+          variant={filter === "completed-unpaid" ? "default" : "outline"}
+          size="sm"
+          onClick={() => setFilter("completed-unpaid")}
+        >
+          הושלם ולא שולם
         </Button>
       </div>
 

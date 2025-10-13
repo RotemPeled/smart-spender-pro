@@ -5,12 +5,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { DollarSign, TrendingUp, Briefcase, Calendar, AlertCircle, ArrowRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { format, startOfMonth, endOfMonth } from "date-fns";
 import { he } from "date-fns/locale";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [selectedMonth, setSelectedMonth] = useState(format(new Date(), "yyyy-MM"));
   const [stats, setStats] = useState({
     netProfit: 0,
@@ -93,7 +96,7 @@ export default function Dashboard() {
     <div className="space-y-4 sm:space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">לוח בקרה</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">תקציר</h1>
           <p className="text-sm text-muted-foreground mt-1">ברוך שובך! הנה סקירת המצב שלך.</p>
         </div>
         <Select value={selectedMonth} onValueChange={setSelectedMonth}>
@@ -111,11 +114,14 @@ export default function Dashboard() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-        <Card className="p-4 sm:p-6 bg-gradient-card shadow-elevation hover:shadow-glow transition-all">
+      <div className={`grid gap-4 ${isMobile ? 'grid-cols-2' : 'sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'}`}>
+        <Card 
+          className="p-4 sm:p-6 bg-gradient-card shadow-elevation hover:shadow-glow transition-all cursor-pointer"
+          onClick={() => navigate('/finance')}
+        >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs sm:text-sm font-medium text-muted-foreground">רווח כולל</p>
+              <p className="text-xs sm:text-sm font-medium text-muted-foreground">רווח נקי</p>
               <p className={`text-2xl sm:text-3xl font-bold mt-1 sm:mt-2 ${
                 stats.netProfit >= 0 ? "text-success" : "text-destructive"
               }`}>
@@ -133,7 +139,10 @@ export default function Dashboard() {
           </div>
         </Card>
 
-        <Card className="p-4 sm:p-6 bg-gradient-card shadow-elevation hover:shadow-glow transition-all">
+        <Card 
+          className="p-4 sm:p-6 bg-gradient-card shadow-elevation hover:shadow-glow transition-all cursor-pointer"
+          onClick={() => navigate('/projects?filter=completed-unpaid')}
+        >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs sm:text-sm font-medium text-muted-foreground">סכום לא משולם</p>
@@ -148,7 +157,10 @@ export default function Dashboard() {
           </div>
         </Card>
 
-        <Card className="p-4 sm:p-6 bg-gradient-card shadow-elevation hover:shadow-glow transition-all">
+        <Card 
+          className="p-4 sm:p-6 bg-gradient-card shadow-elevation hover:shadow-glow transition-all cursor-pointer"
+          onClick={() => navigate('/projects?filter=active')}
+        >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs sm:text-sm font-medium text-muted-foreground">פרויקטים פעילים</p>
@@ -162,50 +174,70 @@ export default function Dashboard() {
             </div>
           </div>
         </Card>
+
+        <Card 
+          className="p-4 sm:p-6 bg-gradient-card shadow-elevation hover:shadow-glow transition-all cursor-pointer"
+          onClick={() => navigate('/projects')}
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs sm:text-sm font-medium text-muted-foreground">מועדי אספקה</p>
+              <p className="text-2xl sm:text-3xl font-bold text-foreground mt-1 sm:mt-2">
+                {upcomingDeadlines.length}
+              </p>
+              <p className="text-xs text-muted-foreground mt-1">קרובים</p>
+            </div>
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-destructive/10 flex items-center justify-center flex-shrink-0">
+              <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-destructive" />
+            </div>
+          </div>
+        </Card>
       </div>
 
-      {/* Upcoming Deadlines */}
-      <Card className="p-4 sm:p-6 shadow-elevation">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg sm:text-xl font-bold text-foreground">מועדי אספקה קרובים</h2>
-          <Link to="/projects">
-            <Button variant="ghost" size="sm" className="gap-1 sm:gap-2 text-xs sm:text-sm">
-              <span className="hidden sm:inline">הצג הכל</span>
-              <ArrowRight className="w-4 h-4" />
-            </Button>
-          </Link>
-        </div>
-        {upcomingDeadlines.length > 0 ? (
-          <div className="space-y-3">
-            {upcomingDeadlines.map((project) => (
-              <div
-                key={project.id}
-                className="flex items-center justify-between p-3 sm:p-4 rounded-lg border border-border hover:bg-accent/50 transition-all gap-2"
-              >
-                <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-destructive/10 flex items-center justify-center flex-shrink-0">
-                    <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-destructive" />
+      {/* Upcoming Deadlines - Only show on desktop */}
+      {!isMobile && (
+        <Card className="p-4 sm:p-6 shadow-elevation">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg sm:text-xl font-bold text-foreground">מועדי אספקה קרובים</h2>
+            <Link to="/projects">
+              <Button variant="ghost" size="sm" className="gap-1 sm:gap-2 text-xs sm:text-sm">
+                <span className="hidden sm:inline">הצג הכל</span>
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
+          </div>
+          {upcomingDeadlines.length > 0 ? (
+            <div className="space-y-3">
+              {upcomingDeadlines.map((project) => (
+                <div
+                  key={project.id}
+                  className="flex items-center justify-between p-3 sm:p-4 rounded-lg border border-border hover:bg-accent/50 transition-all gap-2"
+                >
+                  <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-destructive/10 flex items-center justify-center flex-shrink-0">
+                      <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-destructive" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-semibold text-foreground text-sm sm:text-base truncate">{project.name}</p>
+                      <p className="text-xs sm:text-sm text-muted-foreground truncate">{project.client_name}</p>
+                    </div>
                   </div>
-                  <div className="min-w-0">
-                    <p className="font-semibold text-foreground text-sm sm:text-base truncate">{project.name}</p>
-                    <p className="text-xs sm:text-sm text-muted-foreground truncate">{project.client_name}</p>
+                  <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm flex-shrink-0">
+                    <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground hidden sm:block" />
+                    <span className="text-foreground font-medium whitespace-nowrap">
+                      {format(new Date(project.deadline), "d MMM", { locale: he })}
+                    </span>
                   </div>
                 </div>
-                <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm flex-shrink-0">
-                  <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground hidden sm:block" />
-                  <span className="text-foreground font-medium whitespace-nowrap">
-                    {format(new Date(project.deadline), "d MMM", { locale: he })}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-6 sm:py-8 text-sm text-muted-foreground">
-            אין מועדי אספקה קרובים ב-7 הימים הקרובים
-          </div>
-        )}
-      </Card>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-6 sm:py-8 text-sm text-muted-foreground">
+              אין מועדי אספקה קרובים ב-7 הימים הקרובים
+            </div>
+          )}
+        </Card>
+      )}
 
     </div>
   );
