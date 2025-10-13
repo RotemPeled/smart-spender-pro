@@ -9,20 +9,34 @@ import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { he } from "date-fns/locale";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 
-export default function AddProjectDrawer({ 
-  open, 
-  onOpenChange, 
-  onProjectAdded 
-}: { 
+interface AddProjectDrawerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onProjectAdded: () => void;
-}) {
+  projectId?: string;
+  initialData?: {
+    name: string;
+    client_name?: string;
+    price: number;
+    deadline?: string;
+    work_status?: string;
+    payment_status?: string;
+    priority?: string;
+  };
+}
+
+export default function AddProjectDrawer({ 
+  open, 
+  onOpenChange, 
+  onProjectAdded,
+  projectId,
+  initialData
+}: AddProjectDrawerProps) {
   const { user } = useAuth();
   const [name, setName] = useState("");
   const [clientName, setClientName] = useState("");
@@ -32,6 +46,27 @@ export default function AddProjectDrawer({
   const [paymentStatus, setPaymentStatus] = useState("unpaid");
   const [priority, setPriority] = useState("medium");
   const [loading, setLoading] = useState(false);
+
+  // Reset form when drawer opens/closes or when initialData changes
+  useEffect(() => {
+    if (open && initialData) {
+      setName(initialData.name);
+      setClientName(initialData.client_name || "");
+      setPrice(initialData.price.toString());
+      setDeadline(initialData.deadline ? new Date(initialData.deadline) : undefined);
+      setWorkStatus(initialData.work_status || "in_progress");
+      setPaymentStatus(initialData.payment_status || "unpaid");
+      setPriority(initialData.priority || "medium");
+    } else if (open && !initialData) {
+      setName("");
+      setClientName("");
+      setPrice("");
+      setDeadline(undefined);
+      setWorkStatus("in_progress");
+      setPaymentStatus("unpaid");
+      setPriority("medium");
+    }
+  }, [open, initialData]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,7 +79,7 @@ export default function AddProjectDrawer({
     setLoading(true);
     
     try {
-      const { error } = await supabase.from("projects").insert([{
+      const projectData = {
         user_id: user?.id,
         name,
         client_name: clientName,
@@ -53,24 +88,33 @@ export default function AddProjectDrawer({
         work_status: workStatus as "in_progress" | "ready" | "completed",
         payment_status: paymentStatus as "paid" | "pending" | "unpaid",
         priority: priority as "low" | "medium" | "high",
-      }]);
+      };
+
+      let error;
+      
+      if (projectId) {
+        // Update existing project
+        const { error: updateError } = await supabase
+          .from("projects")
+          .update(projectData)
+          .eq("id", projectId);
+        error = updateError;
+      } else {
+        // Insert new project
+        const { error: insertError } = await supabase
+          .from("projects")
+          .insert([projectData]);
+        error = insertError;
+      }
 
       if (error) throw error;
 
-      toast.success("הפרויקט נוסף בהצלחה!");
+      toast.success(projectId ? "הפרויקט עודכן בהצלחה!" : "הפרויקט נוסף בהצלחה!");
       onProjectAdded();
       onOpenChange(false);
-      // Reset form
-      setName("");
-      setClientName("");
-      setPrice("");
-      setDeadline(undefined);
-      setWorkStatus("in_progress");
-      setPaymentStatus("unpaid");
-      setPriority("medium");
     } catch (error) {
-      console.error("Error adding project:", error);
-      toast.error("שגיאה בהוספת הפרויקט");
+      console.error("Error saving project:", error);
+      toast.error(projectId ? "שגיאה בעדכון הפרויקט" : "שגיאה בהוספת הפרויקט");
     } finally {
       setLoading(false);
     }
@@ -78,15 +122,17 @@ export default function AddProjectDrawer({
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerOverlay className="bg-black/30 backdrop-blur-sm" />
-      <DrawerContent className="bg-background border-t border-border/10 max-h-[90vh] overflow-y-auto pb-safe">
+      <DrawerOverlay className="bg-black/30 backdrop-blur-sm transition-opacity duration-300" />
+      <DrawerContent className="bg-background border-t border-border/10 max-h-[90vh] overflow-y-auto pb-safe rounded-t-[32px] transition-transform duration-300 ease-in-out">
         {/* Drag Handle */}
         <div className="flex justify-center pt-3 pb-1">
           <div className="w-9 h-1 rounded-full bg-muted-foreground/20" />
         </div>
 
-        <div className="px-6 pt-4 pb-8">
-          <h2 className="text-2xl font-semibold text-foreground mb-7 text-center">פרויקט חדש</h2>
+        <div className="px-6 pt-4 pb-24">
+          <h2 className="text-2xl font-semibold text-foreground mb-7 text-center">
+            {projectId ? "ערוך פרויקט" : "פרויקט חדש"}
+          </h2>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-2">
@@ -199,9 +245,19 @@ export default function AddProjectDrawer({
             </Select>
           </div>
 
-          <Button type="submit" className="w-full h-12 rounded-xl" disabled={loading}>
-            {loading ? "שומר..." : "הוסף פרויקט"}
-          </Button>
+          {/* Floating Add Button */}
+          <div className="fixed bottom-6 left-6 right-6 z-50">
+            <Button 
+              type="submit" 
+              className="w-full h-12 rounded-xl shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] active:scale-[0.98]" 
+              disabled={loading}
+              style={{
+                boxShadow: '0 4px 16px rgba(0, 122, 255, 0.3)'
+              }}
+            >
+              {loading ? "שומר..." : (projectId ? "שמור שינויים" : "הוסף פרויקט")}
+            </Button>
+          </div>
         </form>
         </div>
       </DrawerContent>

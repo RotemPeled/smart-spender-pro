@@ -42,14 +42,14 @@ export const AddTransactionDialog = ({ open, onOpenChange, onAdd }: AddTransacti
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerOverlay className="bg-black/30 backdrop-blur-sm" />
-      <DrawerContent className="bg-background border-t border-border/10 max-h-[90vh] overflow-y-auto pb-safe">
+      <DrawerOverlay className="bg-black/30 backdrop-blur-sm transition-opacity duration-300" />
+      <DrawerContent className="bg-background border-t border-border/10 max-h-[90vh] overflow-y-auto pb-safe rounded-t-[32px] transition-transform duration-300 ease-in-out">
         {/* Drag Handle */}
         <div className="flex justify-center pt-3 pb-1">
           <div className="w-9 h-1 rounded-full bg-muted-foreground/20" />
         </div>
 
-        <div className="px-6 pt-4 pb-8">
+        <div className="px-6 pt-4 pb-24">
           <h2 className="text-2xl font-semibold text-foreground mb-7 text-center">הוצאה חדשה</h2>
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-2">
@@ -89,9 +89,18 @@ export const AddTransactionDialog = ({ open, onOpenChange, onAdd }: AddTransacti
             />
           </div>
 
-          <Button type="submit" className="w-full h-12 rounded-xl">
-            הוסף הוצאה
-          </Button>
+          {/* Floating Add Button */}
+          <div className="fixed bottom-6 left-6 right-6 z-50">
+            <Button 
+              type="submit" 
+              className="w-full h-12 rounded-xl shadow-lg transition-all duration-300 ease-in-out hover:scale-[1.02] active:scale-[0.98]"
+              style={{
+                boxShadow: '0 4px 16px rgba(255, 59, 48, 0.3)'
+              }}
+            >
+              הוסף הוצאה
+            </Button>
+          </div>
         </form>
         </div>
       </DrawerContent>

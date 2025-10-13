@@ -5,6 +5,8 @@ import { Card } from "@/components/ui/card";
 import { Plus, Calendar, Trash2, Circle, CheckCircle2, Edit2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import AddProjectDrawer from "@/components/AddProjectDrawer";
+import QuickActionFab from "@/components/QuickActionFab";
 
 import { format } from "date-fns";
 import { he } from "date-fns/locale";
@@ -26,6 +28,8 @@ export default function Projects() {
   const [searchParams] = useSearchParams();
   const [projects, setProjects] = useState<any[]>([]);
   const [filter, setFilter] = useState<string>("all");
+  const [showEditDrawer, setShowEditDrawer] = useState(false);
+  const [editingProject, setEditingProject] = useState<any>(null);
 
   useEffect(() => {
     const urlFilter = searchParams.get('filter');
@@ -84,6 +88,16 @@ export default function Projects() {
   const handleDeleteProject = async (projectId: string) => {
     await supabase.from("projects").delete().eq("id", projectId);
     fetchProjects();
+  };
+
+  const handleEditProject = (project: any) => {
+    setEditingProject(project);
+    setShowEditDrawer(true);
+  };
+
+  const handleProjectUpdated = () => {
+    fetchProjects();
+    setEditingProject(null);
   };
 
   const getPaymentBadge = (paymentStatus: string) => {
@@ -238,7 +252,7 @@ export default function Projects() {
                           variant="ghost"
                           size="sm"
                           className="h-8 w-8 p-0 rounded-full hover:bg-accent/50"
-                          onClick={() => navigate(`/projects/edit/${project.id}`)}
+                          onClick={() => handleEditProject(project)}
                         >
                           <Edit2 className="w-4 h-4" />
                         </Button>
@@ -276,7 +290,18 @@ export default function Projects() {
           ))
         )}
       </div>
-      
+
+      {/* Edit Project Drawer */}
+      <AddProjectDrawer
+        open={showEditDrawer}
+        onOpenChange={setShowEditDrawer}
+        onProjectAdded={handleProjectUpdated}
+        projectId={editingProject?.id}
+        initialData={editingProject}
+      />
+
+      {/* Quick Action FAB */}
+      <QuickActionFab onProjectAdded={fetchProjects} />
     </div>
   );
 }

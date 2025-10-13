@@ -14,6 +14,9 @@ export default function QuickActionFab({ onProjectAdded, onTransactionAdded }: Q
   const [open, setOpen] = useState(false);
   const [showProjectDrawer, setShowProjectDrawer] = useState(false);
   const [showTransactionDrawer, setShowTransactionDrawer] = useState(false);
+  
+  // Hide FAB when any drawer is open
+  const isAnyDrawerOpen = showProjectDrawer || showTransactionDrawer;
 
   const handleAddProject = () => {
     setOpen(false);
@@ -87,22 +90,24 @@ export default function QuickActionFab({ onProjectAdded, onTransactionAdded }: Q
         </div>
       )}
 
-      {/* Main FAB */}
-      <button
-        onClick={() => setOpen(!open)}
-        className={`fixed ${isMobile ? 'bottom-6 right-6 w-14 h-14' : 'bottom-8 right-8 w-12 h-12'} 
-          rounded-full flex items-center justify-center
-          transition-all duration-200 ease-in-out
-          active:scale-95 hover:scale-105
-          z-[101] ${open ? 'rotate-45' : 'rotate-0'}`}
-        style={{
-          backgroundColor: '#007AFF',
-          boxShadow: '0 8px 20px rgba(0, 122, 255, 0.3), 0 2px 8px rgba(0, 0, 0, 0.15)'
-        }}
-        aria-label="Quick Actions"
-      >
-        <Plus className="w-6 h-6 text-white" strokeWidth={2.5} />
-      </button>
+      {/* Main FAB - Hidden when drawers are open */}
+      {!isAnyDrawerOpen && (
+        <button
+          onClick={() => setOpen(!open)}
+          className={`fixed ${isMobile ? 'bottom-6 right-6 w-14 h-14' : 'bottom-8 right-8 w-12 h-12'} 
+            rounded-full flex items-center justify-center
+            transition-all duration-300 ease-in-out
+            active:scale-95 hover:scale-105
+            z-[101] ${open ? 'rotate-45' : 'rotate-0'}`}
+          style={{
+            backgroundColor: '#007AFF',
+            boxShadow: '0 8px 20px rgba(0, 122, 255, 0.3), 0 2px 8px rgba(0, 0, 0, 0.15)'
+          }}
+          aria-label="Quick Actions"
+        >
+          <Plus className="w-6 h-6 text-white" strokeWidth={2.5} />
+        </button>
+      )}
 
       {/* Drawers */}
       <AddProjectDrawer 
