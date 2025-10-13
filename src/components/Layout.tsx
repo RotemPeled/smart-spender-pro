@@ -2,13 +2,13 @@ import { ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Wallet, LayoutDashboard, Briefcase, DollarSign } from "lucide-react";
-import { SwipeablePages } from "@/components/SwipeablePages";
+import { SwipeableContainer } from "@/components/SwipeableContainer";
 
 interface LayoutProps {
-  children: ReactNode;
+  showSwipeable?: boolean;
 }
 
-export const Layout = ({ children }: LayoutProps) => {
+export const Layout = ({ showSwipeable = false }: LayoutProps) => {
   const location = useLocation();
 
   const navItems = [
@@ -56,9 +56,7 @@ export const Layout = ({ children }: LayoutProps) => {
       </header>
 
       <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-8">
-        <SwipeablePages>
-          {children}
-        </SwipeablePages>
+        {showSwipeable ? <SwipeableContainer /> : null}
       </main>
     </div>
   );

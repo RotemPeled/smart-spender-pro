@@ -93,7 +93,7 @@ export default function QuickActionFab({ onProjectAdded, onTransactionAdded }: Q
             rounded-full flex items-center justify-center
             transition-all duration-300 ease-out
             active:scale-90 hover:scale-110
-            z-[101]`}
+            z-[999]`}
           style={{
             backgroundColor: '#007AFF',
             boxShadow: '0 8px 20px rgba(0, 122, 255, 0.3), 0 2px 8px rgba(0, 0, 0, 0.15)',

@@ -21,27 +21,9 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route
-              path="/"
+              path="/*"
               element={
-                <Layout>
-                  <Dashboard />
-                </Layout>
-              }
-            />
-            <Route
-              path="/projects"
-              element={
-                <Layout>
-                  <Projects />
-                </Layout>
-              }
-            />
-            <Route
-              path="/finance"
-              element={
-                <Layout>
-                  <Finance />
-                </Layout>
+                <Layout showSwipeable={true} />
               }
             />
             <Route path="*" element={<NotFound />} />
