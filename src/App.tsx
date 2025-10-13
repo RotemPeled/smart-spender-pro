@@ -7,6 +7,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { Layout } from "@/components/Layout";
 import Dashboard from "./pages/Dashboard";
 import Projects from "./pages/Projects";
+import AddProject from "./pages/AddProject";
 import Finance from "./pages/Finance";
 import NotFound from "./pages/NotFound";
 
@@ -35,6 +36,10 @@ const App = () => (
                   <Projects />
                 </Layout>
               }
+            />
+            <Route
+              path="/projects/add"
+              element={<AddProject />}
             />
             <Route
               path="/finance"

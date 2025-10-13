@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Plus, Calendar, Trash2, Circle, CheckCircle2, Edit2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { AddProjectDialog } from "@/components/AddProjectDialog";
 import { EditProjectDialog } from "@/components/EditProjectDialog";
 import { format } from "date-fns";
 import { he } from "date-fns/locale";
@@ -23,6 +22,7 @@ import {
 
 export default function Projects() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [projects, setProjects] = useState<any[]>([]);
   const [filter, setFilter] = useState<string>("all");
@@ -64,11 +64,6 @@ export default function Projects() {
     } else {
       setProjects([]);
     }
-  };
-
-  const handleAddProject = async (projectData: any) => {
-    await supabase.from("projects").insert([{ ...projectData, user_id: user?.id }]);
-    fetchProjects();
   };
 
   const handleUpdateProject = async (projectId: string, projectData: any) => {
@@ -132,7 +127,10 @@ export default function Projects() {
           <h1 className="text-2xl sm:text-3xl font-bold text-foreground">פרויקטים</h1>
           <p className="text-sm text-muted-foreground mt-1">נהל את כל פרויקטי הלקוחות שלך</p>
         </div>
-        <AddProjectDialog onAdd={handleAddProject} />
+        <Button onClick={() => navigate('/projects/add')}>
+          <Plus className="w-4 h-4 ml-2" />
+          הוסף פרויקט
+        </Button>
       </div>
 
       {/* Filters */}
@@ -196,9 +194,7 @@ export default function Projects() {
                     className="flex-shrink-0 hover:scale-110 transition-transform mt-1"
                     title={project.work_status === "in_progress" ? "לחץ כדי לסמן כמוכן" : "לחץ כדי לסמן כבתהליך"}
                   >
-                    {project.work_status === "completed" && project.payment_status === "paid" ? (
-                      <CheckCircle2 className="w-7 h-7 sm:w-8 sm:h-8 text-success fill-success" />
-                    ) : project.work_status === "ready" ? (
+                    {project.work_status === "ready" || project.work_status === "completed" ? (
                       <CheckCircle2 className="w-7 h-7 sm:w-8 sm:h-8 text-primary" />
                     ) : (
                       <Circle className="w-7 h-7 sm:w-8 sm:h-8 text-muted-foreground" />
