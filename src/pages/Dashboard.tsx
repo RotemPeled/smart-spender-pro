@@ -241,7 +241,9 @@ export default function Dashboard() {
       )}
 
       {/* Quick Action FAB */}
-      <QuickActionFab />
+      <QuickActionFab 
+        onProjectAdded={fetchDashboardData}
+      />
     </div>
   );
 }

@@ -6,9 +6,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { format, startOfMonth, endOfMonth } from "date-fns";
 import { he } from "date-fns/locale";
-import { AddTransactionDialog } from "@/components/AddTransactionDialog";
 import { TransactionList } from "@/components/TransactionList";
 import { FinanceChart } from "@/components/FinanceChart";
+import QuickActionFab from "@/components/QuickActionFab";
 
 export default function Finance() {
   const { user } = useAuth();
@@ -70,10 +70,13 @@ export default function Finance() {
   };
 
   const handleAddTransaction = async (transactionData: any) => {
-    await supabase
+    const { error } = await supabase
       .from("transactions")
       .insert([{ ...transactionData, user_id: user?.id }]);
-    fetchTransactions();
+    
+    if (!error) {
+      fetchTransactions();
+    }
   };
 
   const handleDeleteTransaction = async (transactionId: string) => {
@@ -107,7 +110,6 @@ export default function Finance() {
               ))}
             </SelectContent>
           </Select>
-          <AddTransactionDialog onAdd={handleAddTransaction} />
         </div>
       </div>
 
@@ -170,6 +172,9 @@ export default function Finance() {
           </div>
         </div>
       </Card>
+
+      {/* Quick Action FAB */}
+      <QuickActionFab onTransactionAdded={handleAddTransaction} />
     </div>
   );
 }

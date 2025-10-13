@@ -1,19 +1,36 @@
 import { Plus, FolderPlus, ArrowUpCircle } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import AddProjectDrawer from "@/components/AddProjectDrawer";
+import { AddTransactionDialog } from "@/components/AddTransactionDialog";
 
-export default function QuickActionFab() {
-  const navigate = useNavigate();
+interface QuickActionFabProps {
+  onProjectAdded?: () => void;
+  onTransactionAdded?: (transaction: any) => void;
+}
+
+export default function QuickActionFab({ onProjectAdded, onTransactionAdded }: QuickActionFabProps) {
   const isMobile = useIsMobile();
   const [open, setOpen] = useState(false);
+  const [showProjectDrawer, setShowProjectDrawer] = useState(false);
+  const [showTransactionDrawer, setShowTransactionDrawer] = useState(false);
 
   const handleAddProject = () => {
-    navigate("/add-project");
+    setOpen(false);
+    setShowProjectDrawer(true);
   };
 
   const handleAddExpense = () => {
-    navigate("/finance");
+    setOpen(false);
+    setShowTransactionDrawer(true);
+  };
+
+  const handleProjectAdded = () => {
+    onProjectAdded?.();
+  };
+
+  const handleTransactionAdded = (transaction: any) => {
+    onTransactionAdded?.(transaction);
   };
 
   return (
@@ -86,6 +103,18 @@ export default function QuickActionFab() {
       >
         <Plus className="w-6 h-6 text-white" strokeWidth={2.5} />
       </button>
+
+      {/* Drawers */}
+      <AddProjectDrawer 
+        open={showProjectDrawer} 
+        onOpenChange={setShowProjectDrawer}
+        onProjectAdded={handleProjectAdded}
+      />
+      <AddTransactionDialog 
+        open={showTransactionDrawer} 
+        onOpenChange={setShowTransactionDrawer}
+        onAdd={handleTransactionAdded}
+      />
     </>
   );
 }
