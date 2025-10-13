@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Wallet, LayoutDashboard, Briefcase, DollarSign } from "lucide-react";
+import { SwipeablePages } from "@/components/SwipeablePages";
 
 interface LayoutProps {
   children: ReactNode;
@@ -55,7 +56,9 @@ export const Layout = ({ children }: LayoutProps) => {
       </header>
 
       <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-8">
-        {children}
+        <SwipeablePages>
+          {children}
+        </SwipeablePages>
       </main>
     </div>
   );
