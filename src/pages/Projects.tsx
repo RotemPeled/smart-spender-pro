@@ -191,12 +191,11 @@ export default function Projects() {
                 <Plus className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
               </div>
               <div>
-                <h3 className="text-base sm:text-lg font-semibold text-foreground">אין עדיין פרויקטים</h3>
+                <h3 className="text-base sm:text-lg font-semibold text-foreground">אין פרויקטים בקטגוריה זו</h3>
                 <p className="text-sm text-muted-foreground mt-1">
-                  צור את הפרויקט הראשון שלך כדי להתחיל
+                  השתמש בכפתור למעלה כדי להוסיף פרויקט חדש
                 </p>
               </div>
-              <AddProjectDialog onAdd={handleAddProject} />
             </div>
           </Card>
         ) : (
@@ -204,6 +203,22 @@ export default function Projects() {
             <Card key={project.id} className="p-4 sm:p-6 shadow-elevation hover:shadow-glow transition-all">
               <div className="flex flex-col gap-3 sm:gap-4">
                 <div className="flex items-start gap-3 sm:gap-4">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleWorkStatus(project);
+                    }}
+                    className="flex-shrink-0 hover:scale-110 transition-transform mt-1"
+                    title={project.work_status === "in_progress" ? "לחץ כדי לסמן כמוכן" : "לחץ כדי לסמן כבתהליך"}
+                  >
+                    {project.work_status === "completed" ? (
+                      <CheckCircle2 className="w-7 h-7 sm:w-8 sm:h-8 text-success fill-success" />
+                    ) : project.work_status === "ready" ? (
+                      <CheckCircle2 className="w-7 h-7 sm:w-8 sm:h-8 text-primary" />
+                    ) : (
+                      <Circle className="w-7 h-7 sm:w-8 sm:h-8 text-muted-foreground" />
+                    )}
+                  </button>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-2 sm:gap-4">
                       <div className="min-w-0 flex-1">
@@ -230,23 +245,6 @@ export default function Projects() {
                           {format(new Date(project.deadline), "d MMM yyyy", { locale: he })}
                         </div>
                       )}
-                      
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleWorkStatus(project);
-                        }}
-                        className="flex items-center gap-1 text-xs hover:scale-110 transition-transform"
-                        title={project.work_status === "in_progress" ? "לחץ כדי לסמן כמוכן" : "לחץ כדי לסמן כבתהליך"}
-                      >
-                        {project.work_status === "completed" ? (
-                          <CheckCircle2 className="w-5 h-5 text-success fill-success" />
-                        ) : project.work_status === "ready" ? (
-                          <CheckCircle2 className="w-5 h-5 text-primary" />
-                        ) : (
-                          <Circle className="w-5 h-5 text-muted-foreground" />
-                        )}
-                      </button>
 
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
