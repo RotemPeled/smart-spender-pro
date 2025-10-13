@@ -66,16 +66,16 @@ export const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
           הוסף פרויקט
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>הוסף פרויקט חדש</DialogTitle>
-          <DialogDescription>
+      <DialogContent className="sm:max-w-[500px] max-h-[85vh] overflow-y-auto p-4 sm:p-6">
+        <DialogHeader className="space-y-1 sm:space-y-2">
+          <DialogTitle className="text-lg sm:text-xl">הוסף פרויקט חדש</DialogTitle>
+          <DialogDescription className="text-xs sm:text-sm">
             צור פרויקט חדש עם פרטים על העבודה והתשלום.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid gap-2">
-            <label htmlFor="name" className="text-sm font-medium">
+        <div className="grid gap-3 sm:gap-4 py-3 sm:py-4">
+          <div className="grid gap-1.5 sm:gap-2">
+            <label htmlFor="name" className="text-xs sm:text-sm font-medium">
               שם הפרויקט *
             </label>
             <Input
@@ -83,10 +83,11 @@ export const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
               placeholder="הזן שם פרויקט"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              className="text-sm"
             />
           </div>
-          <div className="grid gap-2">
-            <label htmlFor="clientName" className="text-sm font-medium">
+          <div className="grid gap-1.5 sm:gap-2">
+            <label htmlFor="clientName" className="text-xs sm:text-sm font-medium">
               שם הלקוח
             </label>
             <Input
@@ -94,10 +95,11 @@ export const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
               placeholder="הזן שם לקוח"
               value={clientName}
               onChange={(e) => setClientName(e.target.value)}
+              className="text-sm"
             />
           </div>
-          <div className="grid gap-2">
-            <label htmlFor="description" className="text-sm font-medium">
+          <div className="grid gap-1.5 sm:gap-2">
+            <label htmlFor="description" className="text-xs sm:text-sm font-medium">
               תיאור
             </label>
             <Textarea
@@ -105,11 +107,12 @@ export const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
               placeholder="הזן תיאור פרויקט"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              rows={3}
+              rows={2}
+              className="text-sm resize-none"
             />
           </div>
-          <div className="grid gap-2">
-            <label htmlFor="price" className="text-sm font-medium">
+          <div className="grid gap-1.5 sm:gap-2">
+            <label htmlFor="price" className="text-xs sm:text-sm font-medium">
               מחיר *
             </label>
             <Input
@@ -119,6 +122,7 @@ export const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
               placeholder="0.00"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
+              className="text-sm"
             />
           </div>
           <div className="flex items-center gap-2">
@@ -127,13 +131,13 @@ export const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
               checked={isRetainer}
               onCheckedChange={(checked) => setIsRetainer(checked as boolean)}
             />
-            <label htmlFor="retainer" className="text-sm font-medium cursor-pointer">
+            <label htmlFor="retainer" className="text-xs sm:text-sm font-medium cursor-pointer">
               ריטיינר
             </label>
           </div>
           {!isRetainer && (
-            <div className="grid gap-2">
-              <label htmlFor="deadline" className="text-sm font-medium">
+            <div className="grid gap-1.5 sm:gap-2">
+              <label htmlFor="deadline" className="text-xs sm:text-sm font-medium">
                 מועד אספקה
               </label>
               <Input
@@ -141,15 +145,16 @@ export const AddProjectDialog = ({ onAdd }: AddProjectDialogProps) => {
                 type="date"
                 value={deadline}
                 onChange={(e) => setDeadline(e.target.value)}
+                className="text-sm"
               />
             </div>
           )}
         </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)}>
+        <DialogFooter className="gap-2 sm:gap-0">
+          <Button variant="outline" onClick={() => setOpen(false)} className="text-sm">
             ביטול
           </Button>
-          <Button onClick={handleSubmit}>הוסף פרויקט</Button>
+          <Button onClick={handleSubmit} className="text-sm">הוסף פרויקט</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

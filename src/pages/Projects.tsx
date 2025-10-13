@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Calendar, Trash2, ChevronDown } from "lucide-react";
+import { Plus, Calendar, Trash2, ChevronDown, Circle, CheckCircle2, Edit2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -35,9 +35,6 @@ export default function Projects() {
   const [projects, setProjects] = useState<any[]>([]);
   const [filter, setFilter] = useState<string>("all");
   const [editingProject, setEditingProject] = useState<any>(null);
-  const [swipedProject, setSwipedProject] = useState<string | null>(null);
-  const [touchStart, setTouchStart] = useState<number>(0);
-  const [touchEnd, setTouchEnd] = useState<number>(0);
 
   useEffect(() => {
     const urlFilter = searchParams.get('filter');
@@ -60,7 +57,21 @@ export default function Projects() {
       .eq("is_archived", false)
       .order("created_at", { ascending: false });
 
-    setProjects(data || []);
+    if (data) {
+      // Sort by deadline - most urgent first
+      const sortedData = [...data].sort((a, b) => {
+        const now = new Date();
+        const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+        
+        const deadlineA = a.deadline ? new Date(a.deadline) : endOfMonth;
+        const deadlineB = b.deadline ? new Date(b.deadline) : endOfMonth;
+        
+        return deadlineA.getTime() - deadlineB.getTime();
+      });
+      setProjects(sortedData);
+    } else {
+      setProjects([]);
+    }
   };
 
   const handleAddProject = async (projectData: any) => {
@@ -70,9 +81,16 @@ export default function Projects() {
 
   const handleUpdateProject = async (projectId: string, projectData: any) => {
     console.log("Updating project:", projectId, "with data:", projectData);
+    
+    // If payment_status is being set to "paid", automatically set work_status to "completed"
+    const updateData = { ...projectData };
+    if (updateData.payment_status === "paid") {
+      updateData.work_status = "completed";
+    }
+    
     const { error } = await supabase
       .from("projects")
-      .update(projectData)
+      .update(updateData)
       .eq("id", projectId);
     
     if (error) {
@@ -109,37 +127,9 @@ export default function Projects() {
     return variants[paymentStatus] || variants.unpaid;
   };
 
-  const getPriorityBadge = (priority: string) => {
-    const colors: Record<string, string> = {
-      high: "bg-destructive",
-      medium: "bg-primary",
-      low: "bg-muted",
-    };
-    return colors[priority] || colors.medium;
-  };
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setTouchStart(e.targetTouches[0].clientX);
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX);
-  };
-
-  const handleTouchEnd = (projectId: string) => {
-    if (touchStart - touchEnd < -75) {
-      // Swiped right (left to right)
-      setSwipedProject(projectId);
-    }
-    if (touchStart - touchEnd > 75) {
-      // Swiped left - close
-      setSwipedProject(null);
-    }
-  };
-
-  const handleContextMenu = (e: React.MouseEvent, projectId: string) => {
-    e.preventDefault();
-    setSwipedProject(swipedProject === projectId ? null : projectId);
+  const toggleWorkStatus = (project: any) => {
+    const newStatus = project.work_status === "in_progress" ? "ready" : "in_progress";
+    handleUpdateProject(project.id, { work_status: newStatus });
   };
 
   const filteredProjects = projects.filter((project) => {
@@ -211,24 +201,7 @@ export default function Projects() {
           </Card>
         ) : (
           filteredProjects.map((project) => (
-            <div key={project.id} className="relative overflow-hidden">
-              <Card
-                className={`p-4 sm:p-6 shadow-elevation hover:shadow-glow transition-all cursor-pointer ${
-                  swipedProject === project.id ? "translate-x-20" : ""
-                }`}
-                style={{ transition: "transform 0.3s ease" }}
-                onClick={(e) => {
-                  if (swipedProject === project.id) {
-                    setSwipedProject(null);
-                  } else {
-                    setEditingProject(project);
-                  }
-                }}
-                onContextMenu={(e) => handleContextMenu(e, project.id)}
-                onTouchStart={handleTouchStart}
-                onTouchMove={handleTouchMove}
-                onTouchEnd={() => handleTouchEnd(project.id)}
-              >
+            <Card key={project.id} className="p-4 sm:p-6 shadow-elevation hover:shadow-glow transition-all">
               <div className="flex flex-col gap-3 sm:gap-4">
                 <div className="flex items-start gap-3 sm:gap-4">
                   <div className="flex-1 min-w-0">
@@ -258,29 +231,22 @@ export default function Projects() {
                         </div>
                       )}
                       
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant={project.work_status === "completed" ? "default" : "secondary"}
-                            size="sm"
-                            className="h-6 px-2 text-xs gap-1"
-                          >
-                            {project.work_status === "completed" ? "הושלם" : project.work_status === "in_progress" ? "בתהליך" : "מוכן"}
-                            <ChevronDown className="w-3 h-3" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="bg-background z-50">
-                          <DropdownMenuItem onClick={() => handleUpdateProject(project.id, { work_status: "in_progress" })}>
-                            בתהליך
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleUpdateProject(project.id, { work_status: "ready" })}>
-                            מוכן
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleUpdateProject(project.id, { work_status: "completed" })}>
-                            הושלם
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleWorkStatus(project);
+                        }}
+                        className="flex items-center gap-1 text-xs hover:scale-110 transition-transform"
+                        title={project.work_status === "in_progress" ? "לחץ כדי לסמן כמוכן" : "לחץ כדי לסמן כבתהליך"}
+                      >
+                        {project.work_status === "completed" ? (
+                          <CheckCircle2 className="w-5 h-5 text-success fill-success" />
+                        ) : project.work_status === "ready" ? (
+                          <CheckCircle2 className="w-5 h-5 text-primary" />
+                        ) : (
+                          <Circle className="w-5 h-5 text-muted-foreground" />
+                        )}
+                      </button>
 
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -306,68 +272,46 @@ export default function Projects() {
                         </DropdownMenuContent>
                       </DropdownMenu>
 
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            className={`h-6 px-2 text-xs gap-1 ${getPriorityBadge(project.priority)}`}
-                          >
-                            עדיפות {project.priority === "high" ? "גבוהה" : project.priority === "medium" ? "בינונית" : "נמוכה"}
-                            <ChevronDown className="w-3 h-3" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="bg-background z-50">
-                          <DropdownMenuItem onClick={() => handleUpdateProject(project.id, { priority: "low" })}>
-                            נמוכה
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleUpdateProject(project.id, { priority: "medium" })}>
-                            בינונית
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleUpdateProject(project.id, { priority: "high" })}>
-                            גבוהה
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      <div className="flex gap-1 mr-auto">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 w-6 p-0"
+                          onClick={() => setEditingProject(project)}
+                        >
+                          <Edit2 className="w-4 h-4" />
+                        </Button>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-6 w-6 p-0 hover:text-destructive"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>האם אתה בטוח?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                פעולה זו תמחק את הפרויקט לצמיתות ולא ניתן לבטל אותה.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>ביטול</AlertDialogCancel>
+                              <AlertDialogAction onClick={() => handleDeleteProject(project.id)}>
+                                מחק
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </Card>
-            {swipedProject === project.id && (
-              <div className="absolute left-0 top-0 bottom-0 w-20 flex items-center justify-center animate-fade-in">
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button
-                      variant="destructive"
-                      size="icon"
-                      className="h-full w-20 rounded-lg"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <Trash2 className="w-5 h-5" />
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent onClick={(e) => e.stopPropagation()}>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>האם אתה בטוח?</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        פעולה זו תמחק את הפרויקט לצמיתות ולא ניתן לבטל אותה.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel onClick={() => setSwipedProject(null)}>ביטול</AlertDialogCancel>
-                      <AlertDialogAction onClick={() => {
-                        handleDeleteProject(project.id);
-                        setSwipedProject(null);
-                      }}>
-                        מחק
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </div>
-            )}
-          </div>
           ))
         )}
       </div>
