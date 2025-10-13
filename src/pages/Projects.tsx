@@ -114,24 +114,25 @@ export default function Projects() {
   });
 
   return (
-    <div className="space-y-4 sm:space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+    <div className="space-y-6 sm:space-y-10 animate-fade-in">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">פרויקטים</h1>
-          <p className="text-sm text-muted-foreground mt-1">נהל את כל פרויקטי הלקוחות שלך</p>
+          <h1 className="text-3xl sm:text-4xl font-semibold text-foreground tracking-tight">פרויקטים</h1>
+          <p className="text-base text-muted-foreground mt-2">נהל את כל פרויקטי הלקוחות שלך</p>
         </div>
-        <Button onClick={() => navigate('/projects/add')}>
+        <Button onClick={() => navigate('/projects/add')} className="shadow-sm hover:shadow-elevation transition-all duration-200">
           <Plus className="w-4 h-4 ml-2" />
           הוסף פרויקט
         </Button>
       </div>
 
       {/* Filters */}
-      <div className="flex gap-2 overflow-x-auto pb-2">
+      <div className="flex gap-3 overflow-x-auto pb-2">
         <Button
           variant={filter === "all" ? "default" : "outline"}
           size="sm"
           onClick={() => setFilter("all")}
+          className="rounded-full px-5 transition-all duration-200"
         >
           הכל
         </Button>
@@ -139,6 +140,7 @@ export default function Projects() {
           variant={filter === "active" ? "default" : "outline"}
           size="sm"
           onClick={() => setFilter("active")}
+          className="rounded-full px-5 transition-all duration-200"
         >
           פעילים
         </Button>
@@ -146,6 +148,7 @@ export default function Projects() {
           variant={filter === "unpaid" ? "default" : "outline"}
           size="sm"
           onClick={() => setFilter("unpaid")}
+          className="rounded-full px-5 transition-all duration-200"
         >
           לא שולם
         </Button>
@@ -153,22 +156,23 @@ export default function Projects() {
           variant={filter === "completed-unpaid" ? "default" : "outline"}
           size="sm"
           onClick={() => setFilter("completed-unpaid")}
+          className="rounded-full px-5 transition-all duration-200"
         >
           הושלם ולא שולם
         </Button>
       </div>
 
       {/* Projects Grid */}
-      <div className="grid gap-3 sm:gap-4">
+      <div className="grid gap-4 sm:gap-5">
         {filteredProjects.length === 0 ? (
-          <Card className="p-6 sm:p-12 text-center shadow-elevation">
-            <div className="max-w-md mx-auto space-y-3 sm:space-y-4">
-              <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
-                <Plus className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
+          <Card className="p-12 sm:p-16 text-center shadow-elevation rounded-2xl border border-border/50">
+            <div className="max-w-md mx-auto space-y-5">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto">
+                <Plus className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
               </div>
               <div>
-                <h3 className="text-base sm:text-lg font-semibold text-foreground">אין פרויקטים בקטגוריה זו</h3>
-                <p className="text-sm text-muted-foreground mt-1">
+                <h3 className="text-xl sm:text-2xl font-semibold text-foreground tracking-tight">אין פרויקטים בקטגוריה זו</h3>
+                <p className="text-base text-muted-foreground mt-2">
                   השתמש בכפתור למעלה כדי להוסיף פרויקט חדש
                 </p>
               </div>
@@ -176,46 +180,46 @@ export default function Projects() {
           </Card>
         ) : (
           filteredProjects.map((project) => (
-            <Card key={project.id} className="p-4 sm:p-6 shadow-elevation hover:shadow-glow transition-all">
-              <div className="flex flex-col gap-3 sm:gap-4">
-                <div className="flex items-start gap-3 sm:gap-4">
+            <Card key={project.id} className="p-6 sm:p-8 shadow-elevation hover:shadow-glow transition-all duration-300 rounded-2xl border border-border/50">
+              <div className="flex flex-col gap-4">
+                <div className="flex items-start gap-4 sm:gap-5">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       toggleWorkStatus(project);
                     }}
-                    className="flex-shrink-0 hover:scale-110 transition-transform mt-1"
+                    className="flex-shrink-0 hover:scale-105 transition-all duration-200 mt-1"
                     title={project.work_status === "in_progress" ? "לחץ כדי לסמן כמוכן" : "לחץ כדי לסמן כבתהליך"}
                   >
                     {project.work_status === "ready" || project.work_status === "completed" ? (
-                      <CheckCircle2 className="w-7 h-7 sm:w-8 sm:h-8 text-primary" />
+                      <CheckCircle2 className="w-8 h-8 sm:w-9 sm:h-9 text-primary" />
                     ) : (
-                      <Circle className="w-7 h-7 sm:w-8 sm:h-8 text-muted-foreground" />
+                      <Circle className="w-8 h-8 sm:w-9 sm:h-9 text-muted-foreground" />
                     )}
                   </button>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-2 sm:gap-4">
+                    <div className="flex items-start justify-between gap-3 sm:gap-5">
                       <div className="min-w-0 flex-1">
-                        <h3 className="text-base sm:text-lg font-bold text-foreground truncate">{project.name}</h3>
-                        <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+                        <h3 className="text-lg sm:text-xl font-semibold text-foreground truncate tracking-tight">{project.name}</h3>
+                        <p className="text-sm sm:text-base text-muted-foreground mt-1.5">
                           {project.client_name || "ללא לקוח"}
                         </p>
                       </div>
                       <div className="text-left flex-shrink-0">
-                        <div className="flex items-center gap-1 text-lg sm:text-xl font-bold text-foreground whitespace-nowrap">
+                        <div className="flex items-center gap-1 text-xl sm:text-2xl font-semibold text-foreground whitespace-nowrap">
                           ₪{Number(project.price).toLocaleString()}
                         </div>
                       </div>
                     </div>
                     {project.description && (
-                      <p className="text-xs sm:text-sm text-muted-foreground mt-2 line-clamp-2">
+                      <p className="text-sm sm:text-base text-muted-foreground mt-3 line-clamp-2">
                         {project.description}
                       </p>
                     )}
-                    <div className="flex flex-wrap items-center gap-2 mt-3">
+                    <div className="flex flex-wrap items-center gap-3 mt-4">
                       {project.deadline && (
-                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                          <Calendar className="w-3 h-3" />
+                        <div className="flex items-center gap-1.5 text-sm text-muted-foreground px-3 py-1.5 rounded-full bg-accent/50">
+                          <Calendar className="w-3.5 h-3.5" />
                           {format(new Date(project.deadline), "d MMM yyyy", { locale: he })}
                         </div>
                       )}
@@ -223,17 +227,17 @@ export default function Projects() {
                       <Button
                         variant="secondary"
                         size="sm"
-                        className={`h-6 px-2 text-xs ${project.payment_status === "paid" ? "bg-success hover:bg-success/90" : ""}`}
+                        className={`h-8 px-4 text-sm rounded-full transition-all duration-200 ${project.payment_status === "paid" ? "bg-success/10 text-success hover:bg-success/20" : ""}`}
                         onClick={() => togglePaymentStatus(project)}
                       >
                         {project.payment_status === "paid" ? "שולם" : "לא שולם"}
                       </Button>
 
-                      <div className="flex gap-1 mr-auto">
+                      <div className="flex gap-2 mr-auto">
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-6 w-6 p-0"
+                          className="h-8 w-8 p-0 rounded-full hover:bg-accent/50"
                           onClick={() => navigate(`/projects/edit/${project.id}`)}
                         >
                           <Edit2 className="w-4 h-4" />
@@ -243,21 +247,21 @@ export default function Projects() {
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="h-6 w-6 p-0 hover:text-destructive"
+                              className="h-8 w-8 p-0 rounded-full hover:bg-destructive/10 hover:text-destructive"
                             >
                               <Trash2 className="w-4 h-4" />
                             </Button>
                           </AlertDialogTrigger>
-                          <AlertDialogContent>
+                          <AlertDialogContent className="rounded-2xl">
                             <AlertDialogHeader>
-                              <AlertDialogTitle>האם אתה בטוח?</AlertDialogTitle>
-                              <AlertDialogDescription>
+                              <AlertDialogTitle className="text-xl">האם אתה בטוח?</AlertDialogTitle>
+                              <AlertDialogDescription className="text-base">
                                 פעולה זו תמחק את הפרויקט לצמיתות ולא ניתן לבטל אותה.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                              <AlertDialogCancel>ביטול</AlertDialogCancel>
-                              <AlertDialogAction onClick={() => handleDeleteProject(project.id)}>
+                              <AlertDialogCancel className="rounded-xl">ביטול</AlertDialogCancel>
+                              <AlertDialogAction onClick={() => handleDeleteProject(project.id)} className="rounded-xl">
                                 מחק
                               </AlertDialogAction>
                             </AlertDialogFooter>

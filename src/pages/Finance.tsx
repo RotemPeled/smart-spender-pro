@@ -88,11 +88,11 @@ export default function Finance() {
   });
 
   return (
-    <div className="space-y-4 sm:space-y-8">
-      <div className="flex flex-col gap-3">
+    <div className="space-y-6 sm:space-y-10 animate-fade-in">
+      <div className="flex flex-col gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">כספים</h1>
-          <p className="text-sm text-muted-foreground mt-1">עקוב אחר ההכנסות וההוצאות שלך</p>
+          <h1 className="text-3xl sm:text-4xl font-semibold text-foreground tracking-tight">כספים</h1>
+          <p className="text-base text-muted-foreground mt-2">עקוב אחר ההכנסות וההוצאות שלך</p>
         </div>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
           <Select value={selectedMonth} onValueChange={setSelectedMonth}>
@@ -112,35 +112,39 @@ export default function Finance() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2">
-        <Card className="p-4 sm:p-6 bg-gradient-card shadow-elevation hover:shadow-glow transition-all">
-          <div className="flex items-center justify-between">
+      <div className="grid gap-5 sm:gap-6 grid-cols-1 sm:grid-cols-2">
+        <Card className="p-6 sm:p-8 bg-card shadow-elevation hover:shadow-glow transition-all duration-300 rounded-2xl border border-border/50">
+          <div className="flex flex-col gap-4">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-destructive/10 flex items-center justify-center">
+              <TrendingDown className="w-6 h-6 sm:w-7 sm:h-7 text-destructive" />
+            </div>
             <div>
-              <p className="text-xs sm:text-sm font-medium text-muted-foreground">סך הוצאות</p>
-              <p className="text-2xl sm:text-3xl font-bold text-destructive mt-1 sm:mt-2">
+              <p className="text-sm font-medium text-muted-foreground mb-2">סך הוצאות</p>
+              <p className="text-3xl sm:text-4xl font-semibold text-destructive tracking-tight">
                 ₪{stats.totalExpenses.toLocaleString()}
               </p>
-            </div>
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-destructive/10 flex items-center justify-center flex-shrink-0">
-              <TrendingDown className="w-5 h-5 sm:w-6 sm:h-6 text-destructive" />
             </div>
           </div>
         </Card>
 
-        <Card className="p-4 sm:p-6 bg-gradient-card shadow-elevation hover:shadow-glow transition-all">
-          <div className="flex items-center justify-between">
+        <Card className="p-6 sm:p-8 bg-card shadow-elevation hover:shadow-glow transition-all duration-300 rounded-2xl border border-border/50">
+          <div className="flex flex-col gap-4">
+            <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center ${
+              stats.netProfit >= 0 ? "bg-success/10" : "bg-destructive/10"
+            }`}>
+              <DollarSign className={`w-6 h-6 sm:w-7 sm:h-7 ${
+                stats.netProfit >= 0 ? "text-success" : "text-destructive"
+              }`} />
+            </div>
             <div>
-              <p className="text-xs sm:text-sm font-medium text-muted-foreground">רווח נקי</p>
+              <p className="text-sm font-medium text-muted-foreground mb-2">רווח נקי</p>
               <p
-                className={`text-2xl sm:text-3xl font-bold mt-1 sm:mt-2 ${
+                className={`text-3xl sm:text-4xl font-semibold tracking-tight ${
                   stats.netProfit >= 0 ? "text-success" : "text-destructive"
                 }`}
               >
                 ₪{stats.netProfit.toLocaleString()}
               </p>
-            </div>
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-              <DollarSign className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
             </div>
           </div>
         </Card>
@@ -153,14 +157,14 @@ export default function Finance() {
       <TransactionList transactions={transactions} onDelete={handleDeleteTransaction} />
 
       {/* Bank API Placeholder */}
-      <Card className="p-8 text-center shadow-elevation">
-        <div className="max-w-md mx-auto space-y-4">
-          <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
-            <Plus className="w-8 h-8 text-primary" />
+      <Card className="p-12 text-center shadow-elevation rounded-2xl border border-border/50">
+        <div className="max-w-md mx-auto space-y-5">
+          <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto">
+            <Plus className="w-10 h-10 text-primary" />
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-foreground">חבר חשבון בנק</h3>
-            <p className="text-muted-foreground mt-1">
+            <h3 className="text-xl font-semibold text-foreground tracking-tight">חבר חשבון בנק</h3>
+            <p className="text-base text-muted-foreground mt-2">
               ייבא עסקאות אוטומטית מחשבון הבנק שלך (בקרוב)
             </p>
           </div>

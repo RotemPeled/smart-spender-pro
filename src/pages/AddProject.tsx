@@ -39,21 +39,22 @@ export default function AddProject() {
   };
 
   return (
-    <div className="min-h-screen bg-background p-4 sm:p-6">
-      <div className="max-w-2xl mx-auto space-y-6">
-        <div className="flex items-center gap-3">
+    <div className="min-h-screen bg-background p-4 sm:p-6 animate-fade-in">
+      <div className="max-w-2xl mx-auto space-y-8">
+        <div className="flex items-center gap-4">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigate('/projects')}
+            className="rounded-full hover:bg-accent/50"
           >
             <ArrowRight className="w-5 h-5" />
           </Button>
-          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">פרויקט חדש</h1>
+          <h1 className="text-3xl sm:text-4xl font-semibold text-foreground tracking-tight">פרויקט חדש</h1>
         </div>
 
-        <Card className="p-6">
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <Card className="p-8 sm:p-10 shadow-elevation rounded-2xl border border-border/50">
+          <form onSubmit={handleSubmit} className="space-y-7">
             <div className="space-y-2">
               <Label htmlFor="name" className="text-base">שם הפרויקט *</Label>
               <Input
@@ -115,16 +116,16 @@ export default function AddProject() {
               </div>
             )}
 
-            <div className="flex gap-3 pt-4">
+            <div className="flex gap-4 pt-6">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => navigate('/projects')}
-                className="flex-1"
+                className="flex-1 h-11 rounded-xl"
               >
                 ביטול
               </Button>
-              <Button type="submit" className="flex-1">
+              <Button type="submit" className="flex-1 h-11 rounded-xl shadow-sm hover:shadow-elevation">
                 הוסף פרויקט
               </Button>
             </div>
