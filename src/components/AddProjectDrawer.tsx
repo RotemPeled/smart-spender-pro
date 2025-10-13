@@ -121,9 +121,9 @@ export default function AddProjectDrawer({
   };
 
   return (
-    <Drawer open={open} onOpenChange={onOpenChange}>
+    <Drawer open={open} onOpenChange={onOpenChange} modal={true}>
       <DrawerOverlay className="bg-black/30 backdrop-blur-sm fixed inset-0 z-50 transition-opacity duration-300" />
-      <DrawerContent className="bg-white dark:bg-gray-900 border-t border-border/10 fixed bottom-0 left-0 right-0 max-h-[90vh] rounded-t-[32px] transition-transform duration-300 ease-in-out flex flex-col z-50 shadow-[0_-4px_24px_rgba(0,0,0,0.1)]">
+      <DrawerContent className="bg-white dark:bg-gray-900 border-t border-border/10 fixed bottom-0 left-0 right-0 max-h-[90vh] rounded-t-[32px] transition-all duration-300 ease-out flex flex-col z-50 shadow-[0_-4px_24px_rgba(0,0,0,0.1)]">
         {/* Drag Handle */}
         <div className="flex justify-center pt-3 pb-1 flex-shrink-0">
           <div className="w-9 h-1 rounded-full bg-muted-foreground/20" />

@@ -47,11 +47,11 @@ export const SwipeablePages = ({ children }: SwipeablePagesProps) => {
     let offset = diff;
     
     // Add resistance at edges
-    if (currentIndex === 0 && diff > 0) {
-      // At first page, swiping right (trying to go back)
+    if (currentIndex === 0 && diff < 0) {
+      // At first page, swiping left (trying to go back)
       offset = diff * 0.3; // 70% resistance
-    } else if (currentIndex === pages.length - 1 && diff < 0) {
-      // At last page, swiping left (trying to go forward)
+    } else if (currentIndex === pages.length - 1 && diff > 0) {
+      // At last page, swiping right (trying to go forward)
       offset = diff * 0.3; // 70% resistance
     }
     
@@ -69,11 +69,11 @@ export const SwipeablePages = ({ children }: SwipeablePagesProps) => {
 
     // Determine if swipe is significant enough
     if (absDistance > minSwipeDistance) {
-      if (swipeDistance > 0 && currentIndex > 0) {
-        // Swipe right - go to previous page
+      if (swipeDistance < 0 && currentIndex > 0) {
+        // Swipe left - go to previous page (back)
         navigate(pages[currentIndex - 1]);
-      } else if (swipeDistance < 0 && currentIndex < pages.length - 1) {
-        // Swipe left - go to next page
+      } else if (swipeDistance > 0 && currentIndex < pages.length - 1) {
+        // Swipe right - go to next page (forward)
         navigate(pages[currentIndex + 1]);
       } else {
         // Not enough distance or at edge, snap back
