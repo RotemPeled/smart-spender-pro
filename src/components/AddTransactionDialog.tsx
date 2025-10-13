@@ -42,14 +42,15 @@ export const AddTransactionDialog = ({ open, onOpenChange, onAdd }: AddTransacti
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerOverlay className="bg-black/30 backdrop-blur-sm transition-opacity duration-300" />
-      <DrawerContent className="bg-background border-t border-border/10 max-h-[90vh] overflow-y-auto pb-safe rounded-t-[32px] transition-transform duration-300 ease-in-out flex flex-col">
+      <DrawerOverlay className="bg-black/30 backdrop-blur-sm fixed inset-0 z-50 transition-opacity duration-300" />
+      <DrawerContent className="bg-white dark:bg-gray-900 border-t border-border/10 fixed bottom-0 left-0 right-0 max-h-[90vh] rounded-t-[32px] transition-transform duration-300 ease-in-out flex flex-col z-50 shadow-[0_-4px_24px_rgba(0,0,0,0.1)]">
         {/* Drag Handle */}
-        <div className="flex justify-center pt-3 pb-1">
+        <div className="flex justify-center pt-3 pb-1 flex-shrink-0">
           <div className="w-9 h-1 rounded-full bg-muted-foreground/20" />
         </div>
 
-        <div className="px-6 pt-4 pb-32 flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto overscroll-contain px-6 pt-4 pb-32">
+          <div className="max-w-2xl mx-auto">
           <h2 className="text-2xl font-semibold text-foreground mb-7 text-center">הוצאה חדשה</h2>
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-2">
@@ -100,8 +101,9 @@ export const AddTransactionDialog = ({ open, onOpenChange, onAdd }: AddTransacti
             >
               הוסף הוצאה
             </Button>
+            </div>
+          </form>
           </div>
-        </form>
         </div>
       </DrawerContent>
     </Drawer>
