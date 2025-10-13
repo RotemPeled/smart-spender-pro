@@ -2,14 +2,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Plus, Calendar, Trash2, ChevronDown, Circle, CheckCircle2, Edit2 } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Plus, Calendar, Trash2, Circle, CheckCircle2, Edit2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { AddProjectDialog } from "@/components/AddProjectDialog";
@@ -27,7 +20,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { toast } from "@/hooks/use-toast";
 
 export default function Projects() {
   const { user } = useAuth();
@@ -95,26 +87,14 @@ export default function Projects() {
     
     if (error) {
       console.error("Update error:", error);
-      toast({
-        title: "שגיאה",
-        description: "לא ניתן לעדכן את הפרויקט",
-        variant: "destructive",
-      });
       return;
     }
     
     await fetchProjects();
-    toast({
-      title: "הצלחה",
-      description: "הפרויקט עודכן בהצלחה",
-    });
   };
 
   const handleDeleteProject = async (projectId: string) => {
     await supabase.from("projects").delete().eq("id", projectId);
-    toast({
-      title: "הפרויקט נמחק בהצלחה",
-    });
     fetchProjects();
   };
 
@@ -130,6 +110,11 @@ export default function Projects() {
   const toggleWorkStatus = (project: any) => {
     const newStatus = project.work_status === "in_progress" ? "ready" : "in_progress";
     handleUpdateProject(project.id, { work_status: newStatus });
+  };
+
+  const togglePaymentStatus = (project: any) => {
+    const newStatus = project.payment_status === "paid" ? "unpaid" : "paid";
+    handleUpdateProject(project.id, { payment_status: newStatus });
   };
 
   const filteredProjects = projects.filter((project) => {
@@ -211,7 +196,7 @@ export default function Projects() {
                     className="flex-shrink-0 hover:scale-110 transition-transform mt-1"
                     title={project.work_status === "in_progress" ? "לחץ כדי לסמן כמוכן" : "לחץ כדי לסמן כבתהליך"}
                   >
-                    {project.work_status === "completed" ? (
+                    {project.work_status === "completed" && project.payment_status === "paid" ? (
                       <CheckCircle2 className="w-7 h-7 sm:w-8 sm:h-8 text-success fill-success" />
                     ) : project.work_status === "ready" ? (
                       <CheckCircle2 className="w-7 h-7 sm:w-8 sm:h-8 text-primary" />
@@ -246,29 +231,14 @@ export default function Projects() {
                         </div>
                       )}
 
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            className={`h-6 px-2 text-xs gap-1 ${project.payment_status === "paid" ? "bg-success hover:bg-success/90" : ""}`}
-                          >
-                            {project.payment_status === "paid" ? "שולם" : project.payment_status === "pending" ? "ממתין" : "לא שולם"}
-                            <ChevronDown className="w-3 h-3" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="bg-background z-50">
-                          <DropdownMenuItem onClick={() => handleUpdateProject(project.id, { payment_status: "unpaid" })}>
-                            לא שולם
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleUpdateProject(project.id, { payment_status: "pending" })}>
-                            ממתין
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleUpdateProject(project.id, { payment_status: "paid" })}>
-                            שולם
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        className={`h-6 px-2 text-xs ${project.payment_status === "paid" ? "bg-success hover:bg-success/90" : ""}`}
+                        onClick={() => togglePaymentStatus(project)}
+                      >
+                        {project.payment_status === "paid" ? "שולם" : "לא שולם"}
+                      </Button>
 
                       <div className="flex gap-1 mr-auto">
                         <Button
