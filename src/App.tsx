@@ -8,6 +8,7 @@ import { Layout } from "@/components/Layout";
 import Dashboard from "./pages/Dashboard";
 import Projects from "./pages/Projects";
 import AddProject from "./pages/AddProject";
+import EditProject from "./pages/EditProject";
 import Finance from "./pages/Finance";
 import NotFound from "./pages/NotFound";
 
@@ -40,6 +41,10 @@ const App = () => (
             <Route
               path="/projects/add"
               element={<AddProject />}
+            />
+            <Route
+              path="/projects/edit/:id"
+              element={<EditProject />}
             />
             <Route
               path="/finance"

@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Plus, Calendar, Trash2, Circle, CheckCircle2, Edit2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { EditProjectDialog } from "@/components/EditProjectDialog";
+
 import { format } from "date-fns";
 import { he } from "date-fns/locale";
 import {
@@ -26,7 +26,6 @@ export default function Projects() {
   const [searchParams] = useSearchParams();
   const [projects, setProjects] = useState<any[]>([]);
   const [filter, setFilter] = useState<string>("all");
-  const [editingProject, setEditingProject] = useState<any>(null);
 
   useEffect(() => {
     const urlFilter = searchParams.get('filter');
@@ -69,15 +68,9 @@ export default function Projects() {
   const handleUpdateProject = async (projectId: string, projectData: any) => {
     console.log("Updating project:", projectId, "with data:", projectData);
     
-    // If payment_status is being set to "paid", automatically set work_status to "completed"
-    const updateData = { ...projectData };
-    if (updateData.payment_status === "paid") {
-      updateData.work_status = "completed";
-    }
-    
     const { error } = await supabase
       .from("projects")
-      .update(updateData)
+      .update(projectData)
       .eq("id", projectId);
     
     if (error) {
@@ -241,7 +234,7 @@ export default function Projects() {
                           variant="ghost"
                           size="sm"
                           className="h-6 w-6 p-0"
-                          onClick={() => setEditingProject(project)}
+                          onClick={() => navigate(`/projects/edit/${project.id}`)}
                         >
                           <Edit2 className="w-4 h-4" />
                         </Button>
@@ -280,14 +273,6 @@ export default function Projects() {
         )}
       </div>
       
-      {editingProject && (
-        <EditProjectDialog
-          project={editingProject}
-          onUpdate={handleUpdateProject}
-          open={!!editingProject}
-          onOpenChange={(open) => !open && setEditingProject(null)}
-        />
-      )}
     </div>
   );
 }
