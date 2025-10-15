@@ -9,7 +9,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { format, startOfMonth, endOfMonth } from "date-fns";
 import { he } from "date-fns/locale";
 import { useIsMobile } from "@/hooks/use-mobile";
-import QuickActionFab from "@/components/QuickActionFab";
 import { FinanceChart } from "@/components/FinanceChart";
 
 export default function Dashboard() {
@@ -247,11 +246,6 @@ export default function Dashboard() {
           )}
         </Card>
       )}
-
-      {/* Quick Action FAB */}
-      <QuickActionFab 
-        onProjectAdded={fetchDashboardData}
-      />
     </div>
   );
 }

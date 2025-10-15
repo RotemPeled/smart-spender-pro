@@ -6,7 +6,6 @@ import { Plus, Calendar, Trash2, Circle, CheckCircle2, Edit2 } from "lucide-reac
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import AddProjectDrawer from "@/components/AddProjectDrawer";
-import QuickActionFab from "@/components/QuickActionFab";
 
 import { format } from "date-fns";
 import { he } from "date-fns/locale";
@@ -293,9 +292,6 @@ export default function Projects() {
         projectId={editingProject?.id}
         initialData={editingProject}
       />
-
-      {/* Quick Action FAB */}
-      <QuickActionFab onProjectAdded={fetchProjects} />
     </div>
   );
 }

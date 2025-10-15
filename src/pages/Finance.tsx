@@ -130,35 +130,35 @@ export default function Finance() {
         </div>
       </div>
 
-      {/* Stats Cards - Apple Style */}
-      <div className="grid gap-4 sm:gap-5 grid-cols-1 sm:grid-cols-2">
+      {/* Stats Cards - Apple Style Square Cards */}
+      <div className="grid gap-4 sm:gap-5 grid-cols-2">
         {/* Total Income Card */}
-        <Card className="p-6 sm:p-8 bg-white dark:bg-card transition-all duration-300 ease-in-out hover:shadow-lg rounded-[24px] border-0 shadow-[0_2px_12px_rgba(0,0,0,0.08)]">
+        <Card className="p-6 sm:p-8 bg-white dark:bg-card transition-all duration-300 ease-in-out hover:shadow-lg rounded-[24px] border-0 shadow-[0_2px_12px_rgba(0,0,0,0.08)] aspect-square flex flex-col justify-center">
           <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-2xl bg-[#007AFF]/10 flex items-center justify-center flex-shrink-0">
-                <TrendingUp className="w-5 h-5" style={{ color: '#007AFF' }} strokeWidth={2.5} />
-              </div>
-              <h3 className="text-base font-medium text-muted-foreground">סך הכנסות</h3>
+            <div className="w-11 h-11 rounded-2xl bg-[#007AFF]/10 flex items-center justify-center flex-shrink-0">
+              <TrendingUp className="w-5 h-5" style={{ color: '#007AFF' }} strokeWidth={2.5} />
             </div>
-            <p className="text-4xl sm:text-5xl font-semibold tracking-tight" style={{ color: '#007AFF' }}>
-              ₪{stats.totalIncome.toLocaleString()}
-            </p>
+            <div>
+              <h3 className="text-sm sm:text-base font-medium text-muted-foreground mb-2">סך הכנסות</h3>
+              <p className="text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight" style={{ color: '#007AFF' }}>
+                ₪{stats.totalIncome.toLocaleString()}
+              </p>
+            </div>
           </div>
         </Card>
 
         {/* Total Expenses Card */}
-        <Card className="p-6 sm:p-8 bg-white dark:bg-card transition-all duration-300 ease-in-out hover:shadow-lg rounded-[24px] border-0 shadow-[0_2px_12px_rgba(0,0,0,0.08)]">
+        <Card className="p-6 sm:p-8 bg-white dark:bg-card transition-all duration-300 ease-in-out hover:shadow-lg rounded-[24px] border-0 shadow-[0_2px_12px_rgba(0,0,0,0.08)] aspect-square flex flex-col justify-center">
           <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-2xl bg-[#FF3B30]/10 flex items-center justify-center flex-shrink-0">
-                <TrendingDown className="w-5 h-5" style={{ color: '#FF3B30' }} strokeWidth={2.5} />
-              </div>
-              <h3 className="text-base font-medium text-muted-foreground">סך הוצאות</h3>
+            <div className="w-11 h-11 rounded-2xl bg-[#FF3B30]/10 flex items-center justify-center flex-shrink-0">
+              <TrendingDown className="w-5 h-5" style={{ color: '#FF3B30' }} strokeWidth={2.5} />
             </div>
-            <p className="text-4xl sm:text-5xl font-semibold tracking-tight" style={{ color: '#FF3B30' }}>
-              ₪{stats.totalExpenses.toLocaleString()}
-            </p>
+            <div>
+              <h3 className="text-sm sm:text-base font-medium text-muted-foreground mb-2">סך הוצאות</h3>
+              <p className="text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight" style={{ color: '#FF3B30' }}>
+                ₪{stats.totalExpenses.toLocaleString()}
+              </p>
+            </div>
           </div>
         </Card>
       </div>
