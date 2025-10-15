@@ -85,19 +85,19 @@ export default function QuickActionFab({ onProjectAdded, onTransactionAdded }: Q
         </button>
       </div>
 
-      {/* Main FAB - Hidden when drawers are open */}
+      {/* Main FAB - Always visible and floating */}
       {!isAnyDrawerOpen && (
         <button
           onClick={() => setOpen(!open)}
           className={`fixed ${isMobile ? 'bottom-6 right-6 w-14 h-14' : 'bottom-8 right-8 w-12 h-12'} 
             rounded-full flex items-center justify-center
             transition-all duration-300 ease-out
-            active:scale-90 hover:scale-110
-            z-[101]`}
+            active:scale-90 hover:scale-110`}
           style={{
             backgroundColor: '#007AFF',
             boxShadow: '0 8px 20px rgba(0, 122, 255, 0.3), 0 2px 8px rgba(0, 0, 0, 0.15)',
             transform: open ? 'rotate(45deg)' : 'rotate(0deg)',
+            zIndex: 9999,
           }}
           aria-label="Quick Actions"
         >

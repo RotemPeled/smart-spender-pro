@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Wallet, LayoutDashboard, Briefcase, DollarSign } from "lucide-react";
 import { SwipeablePages } from "@/components/SwipeablePages";
+import QuickActionFab from "@/components/QuickActionFab";
 
 interface LayoutProps {
   children: ReactNode;
@@ -60,6 +61,9 @@ export const Layout = ({ children }: LayoutProps) => {
           {children}
         </SwipeablePages>
       </main>
+
+      {/* Global Quick Action FAB */}
+      <QuickActionFab />
     </div>
   );
 };
